@@ -49,6 +49,8 @@ jobs:
         run: chmod +x gradlew
       - name: Run Tests
         run: ./gradlew test -i
+      - name: Run Jacoco
+        run: ./gradlew jacocoTestReport
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
