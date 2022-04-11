@@ -10,7 +10,7 @@ public class Deck {
         leeres_Deck_befüllen();
     }
 
-    public void leeres_Deck_befüllen(){
+    private void leeres_Deck_befüllen(){
         LinkedList<Karte> list = new LinkedList<>();
         list = standardkarten_hinzufügen(list);
         list = zusatzkarten_hinzufügen(list);
