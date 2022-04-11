@@ -47,7 +47,12 @@ public class Deck {
         }
     }
 
-    private void deck_mischen(LinkedList<Karte> zuMischen){
-
+    private void deck_mischen(LinkedList<Karte> zuMischen) {
+        //fügt die Karten in beliebiger Reihenfolge in "restliche_Karten" ein
+        while (zuMischen.size() > 0) {
+            int rand_index = (int) (Math.random() * zuMischen.size());
+            Karte karte = zuMischen.remove(rand_index);
+            restliche_Karten.add(karte);
+        }
     }
 }
