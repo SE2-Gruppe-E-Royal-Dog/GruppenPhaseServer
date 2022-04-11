@@ -12,11 +12,12 @@ public class Deck {
 
     public void leeres_Deck_befüllen(){
         LinkedList<Karte> list = new LinkedList<>();
-        standardkarten_hinzufügen(list);
-        //zusatzkarten_hinzufügen(list);
+        list = standardkarten_hinzufügen(list);
+        list = zusatzkarten_hinzufügen(list);
+        deck_mischen(list);
     }
 
-    private void standardkarten_hinzufügen(LinkedList<Karte> list){
+    private LinkedList<Karte> standardkarten_hinzufügen(LinkedList<Karte> list){
         for(int i=0;i<7;i++){
             list.add(new Zahlenkarte(2));
             list.add(new Zahlenkarte(3));
@@ -35,9 +36,10 @@ public class Deck {
             list.add(new Zahlenkarte(11));
             list.add(new Zahlenkarte(13));
         }
+        return list;
     }
 
-    private void zusatzkarten_hinzufügen(LinkedList<Karte> list){
+    private LinkedList<Karte> zusatzkarten_hinzufügen(LinkedList<Karte> list){
         for(int i=0;i<7;i++){
             list.add(new Spezialkarte(Kartentyp.gleich));
             list.add(new Spezialkarte(Kartentyp.tausch));
@@ -45,6 +47,7 @@ public class Deck {
                 list.add(new Spezialkarte(Kartentyp.magnet));
             }
         }
+        return list;
     }
 
     private void deck_mischen(LinkedList<Karte> zuMischen) {
@@ -54,5 +57,12 @@ public class Deck {
             Karte karte = zuMischen.remove(rand_index);
             restliche_Karten.add(karte);
         }
+    }
+
+    public Karte karte_ziehen(){
+        if(restliche_Karten.size()==0){
+            leeres_Deck_befüllen();
+        }
+        return restliche_Karten.removeFirst();
     }
 }
