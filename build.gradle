@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'jacoco'
     id "org.sonarqube" version "3.3"
+    id "io.freefair.lombok" version "6.4.2"
 }
 
 sonarqube {
@@ -30,6 +31,11 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     testImplementation('org.assertj:assertj-core:3.22.0')
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '2.6.6'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.6.5'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.6.5'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    implementation("com.fasterxml.jackson.core:jackson-core:2.13.2")
 }
 
 test {
