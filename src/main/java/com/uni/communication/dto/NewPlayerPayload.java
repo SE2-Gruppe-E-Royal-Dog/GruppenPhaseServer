@@ -1,8 +1,10 @@
 package com.uni.communication.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class NewPlayerPayload {
     String playerName;
 }

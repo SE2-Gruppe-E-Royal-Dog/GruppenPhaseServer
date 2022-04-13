@@ -1,12 +1,11 @@
 package com.uni.communication.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class NewPlayerJoinedLobbyPayload {
     String playerName;
 }
