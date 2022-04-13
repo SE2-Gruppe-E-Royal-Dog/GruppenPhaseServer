@@ -23,18 +23,18 @@ public class KartendeckTest {
     }
 
     @Test
-    public void deck_wird_befuellt(){
+    public void deckWirdBefuellt(){
         Assertions.assertEquals(110,deck.getDeck().size());
     }
 
     @Test
-    public void deck_neu_mischen(){
+    public void deckNeuMischen(){
         for(int i=0;i<110;i++){
-            deck.karte_ziehen();
+            deck.karteZiehen();
         }
         //Deck ist leer
         Assertions.assertEquals(0,deck.getDeck().size());
-        deck.karte_ziehen();
+        deck.karteZiehen();
         Assertions.assertEquals(109,deck.getDeck().size());
     }
 }

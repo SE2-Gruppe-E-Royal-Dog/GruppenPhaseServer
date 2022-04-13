@@ -3,21 +3,21 @@ package com.uni.Kartendeck;
 import java.util.LinkedList;
 
 public class Deck {
-    private LinkedList<Karte> restliche_Karten;
+    private LinkedList<Karte> restlicheKarten;
 
     public Deck(){
-        restliche_Karten = new LinkedList<>();
-        leeres_Deck_befuellen();
+        restlicheKarten = new LinkedList<>();
+        leeresDeckbefuellen();
     }
 
-    private void leeres_Deck_befuellen(){
+    private void leeresDeckbefuellen(){
         LinkedList<Karte> list = new LinkedList<>();
-        list = standardkarten_hinzufuegen(list);
-        list = zusatzkarten_hinzufuegen(list);
-        deck_mischen(list);
+        list = standardkartenHinzufuegen(list);
+        list = zusatzkartenHinzufuegen(list);
+        deckMischen(list);
     }
 
-    private LinkedList<Karte> standardkarten_hinzufuegen(LinkedList<Karte> list){
+    private LinkedList<Karte> standardkartenHinzufuegen(LinkedList<Karte> list){
         for(int i=0;i<7;i++){
             list.add(new Zahlenkarte(2));
             list.add(new Zahlenkarte(3));
@@ -39,7 +39,7 @@ public class Deck {
         return list;
     }
 
-    private LinkedList<Karte> zusatzkarten_hinzufuegen(LinkedList<Karte> list){
+    private LinkedList<Karte> zusatzkartenHinzufuegen(LinkedList<Karte> list){
         for(int i=0;i<7;i++){
             list.add(new Spezialkarte(Kartentyp.gleich));
             list.add(new Spezialkarte(Kartentyp.tausch));
@@ -50,23 +50,23 @@ public class Deck {
         return list;
     }
 
-    private void deck_mischen(LinkedList<Karte> zuMischen) {
+    private void deckMischen(LinkedList<Karte> zuMischen) {
         //fügt die Karten in beliebiger Reihenfolge in "restliche_Karten" ein
         while (zuMischen.size() > 0) {
             int rand_index = (int) (Math.random() * zuMischen.size());
             Karte karte = zuMischen.remove(rand_index);
-            restliche_Karten.add(karte);
+            restlicheKarten.add(karte);
         }
     }
 
-    public Karte karte_ziehen(){
-        if(restliche_Karten.size()==0){
-            leeres_Deck_befuellen();
+    public Karte karteZiehen(){
+        if(restlicheKarten.size()==0){
+            leeresDeckbefuellen();
         }
-        return restliche_Karten.removeFirst();
+        return restlicheKarten.removeFirst();
     }
 
     public LinkedList<Karte> getDeck(){
-        return restliche_Karten;
+        return restlicheKarten;
     }
 }
