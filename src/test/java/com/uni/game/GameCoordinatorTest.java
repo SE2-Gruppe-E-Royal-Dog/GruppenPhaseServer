@@ -109,6 +109,9 @@ class GameCoordinatorTest {
         comparePlayers(player4InLobby, player4);
         assertThat(firstLobby.getSessions().get(player4InLobby.getId())).isEqualTo(webSocketSession);
 
+        assertThat(firstLobby.isWaitingForPlayers()).isFalse();
+        assertThat(firstLobby.isNotStarted()).isFalse();
+
         var secondLobby = lobbies.get(1);
         assertThat(secondLobby.getPlayers()).hasSize(1);
         var player5InLobby = secondLobby.getPlayers().get(0);
