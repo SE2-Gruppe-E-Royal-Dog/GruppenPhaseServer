@@ -98,16 +98,19 @@ class GameCoordinatorTest {
 
         var player1InLobby = firstLobby.getPlayers().get(0);
         comparePlayers(player1InLobby, player1);
-        assertThat(firstLobby.getSessions().get(player1InLobby.getId())).isEqualTo(webSocketSession);
+        assertThat(firstLobby.getSessions()).containsEntry(player1InLobby.getId(), webSocketSession);
+
         var player2InLobby = firstLobby.getPlayers().get(1);
         comparePlayers(player2InLobby, player2);
-        assertThat(firstLobby.getSessions().get(player2InLobby.getId())).isEqualTo(webSocketSession);
+        assertThat(firstLobby.getSessions()).containsEntry(player2InLobby.getId(), webSocketSession);
+
         var player3InLobby = firstLobby.getPlayers().get(2);
         comparePlayers(player3InLobby, player3);
-        assertThat(firstLobby.getSessions().get(player3InLobby.getId())).isEqualTo(webSocketSession);
+        assertThat(firstLobby.getSessions()).containsEntry(player3InLobby.getId(), webSocketSession);
+
         var player4InLobby = firstLobby.getPlayers().get(3);
         comparePlayers(player4InLobby, player4);
-        assertThat(firstLobby.getSessions().get(player4InLobby.getId())).isEqualTo(webSocketSession);
+        assertThat(firstLobby.getSessions()).containsEntry(player4InLobby.getId(), webSocketSession);
 
         assertThat(firstLobby.isWaitingForPlayers()).isFalse();
         assertThat(firstLobby.isNotStarted()).isFalse();
@@ -116,7 +119,7 @@ class GameCoordinatorTest {
         assertThat(secondLobby.getPlayers()).hasSize(1);
         var player5InLobby = secondLobby.getPlayers().get(0);
         comparePlayers(player5InLobby, player5);
-        assertThat(secondLobby.getSessions().get(player5InLobby.getId())).isEqualTo(webSocketSession);
+        assertThat(firstLobby.getSessions()).containsEntry(player5InLobby.getId(), webSocketSession);
     }
 
     private void comparePlayers(Player player2InLobby, Player player2) {

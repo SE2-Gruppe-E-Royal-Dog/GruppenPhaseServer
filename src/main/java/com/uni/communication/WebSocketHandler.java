@@ -29,10 +29,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         var websocketMessage = objectMapper.readValue(textMessage.getPayload(), Message.class);
 
-        switch (websocketMessage.getType()) {
-            case JOIN_LOBBY:
-                handleNewPlayerMessage(webSocketSession, websocketMessage.getPayload());
-                break;
+        // convert to switch after we handle more types of messages
+        if (websocketMessage.getType() == MessageType.JOIN_LOBBY) {
+            handleNewPlayerMessage(webSocketSession, websocketMessage.getPayload());
         }
     }
 

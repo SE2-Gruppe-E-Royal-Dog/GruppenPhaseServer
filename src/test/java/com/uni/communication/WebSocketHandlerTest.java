@@ -25,7 +25,7 @@ class WebSocketHandlerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    public void givenJoinLobbyMessage_whenNoLobbyExists_expectSendJoinedLobbyMessageIsSend() throws Exception {
+    void givenJoinLobbyMessage_whenNoLobbyExists_expectSendJoinedLobbyMessageIsSend() throws Exception {
         var msg = new Message();
         msg.setType(MessageType.JOIN_LOBBY);
         var payload = new NewPlayerPayload();
@@ -52,7 +52,7 @@ class WebSocketHandlerTest {
     }
 
     @Test
-    public void givenJoinLobbyMessage_whenALobbyWithAnotherPlayerExists_expectSendJoinedLobbyMessageIsSendAndNewPlayerJoinedMessageIsSend() throws Exception {
+    void givenJoinLobbyMessage_whenALobbyWithAnotherPlayerExists_expectSendJoinedLobbyMessageIsSendAndNewPlayerJoinedMessageIsSend() throws Exception {
         var msg = new Message();
         msg.setType(MessageType.JOIN_LOBBY);
         var payload = new NewPlayerPayload();
