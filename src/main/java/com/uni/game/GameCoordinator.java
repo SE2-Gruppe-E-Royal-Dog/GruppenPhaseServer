@@ -3,19 +3,20 @@ package com.uni.game;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public class GameCoordinator {
-    private Map<String, Lobby> lobbies;
+    private final List<Lobby> lobbies;
 
     public GameCoordinator() {
-        this.lobbies = new HashMap<>();
+        this.lobbies = new ArrayList<>();
     }
 
     public String addNewPlayerToLobby(Player player, WebSocketSession webSocketSession) {
-        var maybeAvailableLobby = lobbies.values().stream().filter(Lobby::isNotStarted).filter(Lobby::isWaitingForPlayers).findAny();
+        var maybeAvailableLobby = lobbies.stream().filter(Lobby::isNotStarted).filter(Lobby::isWaitingForPlayers).findAny();
 
         if (maybeAvailableLobby.isPresent()) {
             maybeAvailableLobby.get().addPlayer(player, webSocketSession);
@@ -26,17 +27,17 @@ public class GameCoordinator {
         var lobby = new Lobby();
         lobby.addPlayer(player, webSocketSession);
 
-        lobbies.put(lobby.getLobbyId(), lobby);
+        lobbies.add(lobby);
 
         log.info("Added player {} to lobby {}", player.getName(), lobby.getLobbyId());
         return lobby.getLobbyId();
     }
 
     public Lobby getLobby(String lobbyId) {
-        return lobbies.get(lobbyId);
+        return lobbies.stream().filter(c -> Objects.equals(c.getLobbyId(), lobbyId)).findFirst().orElseThrow();
     }
 
-    public Map<String, Lobby> getLobbies() {
+    public List<Lobby> getLobbies() {
         return lobbies;
     }
 }

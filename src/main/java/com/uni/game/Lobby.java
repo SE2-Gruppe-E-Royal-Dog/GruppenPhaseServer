@@ -21,7 +21,7 @@ public class Lobby {
 
     public void addPlayer(Player player, WebSocketSession webSocketSession) {
         players.add(player);
-        sessions.put(player.getPlayerId(), webSocketSession);
+        sessions.put(player.getId(), webSocketSession);
     }
 
     public boolean isWaitingForPlayers() {

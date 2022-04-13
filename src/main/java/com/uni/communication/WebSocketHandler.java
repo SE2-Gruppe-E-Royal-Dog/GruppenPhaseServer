@@ -50,14 +50,14 @@ public class WebSocketHandler extends TextWebSocketHandler {
         var newPlayer = new Player(payload.getPlayerName());
         var lobbyId = gameCoordinator.addNewPlayerToLobby(newPlayer, webSocketSession);
 
-        notifyOtherPlayers(lobbyId, newPlayer);
+        publishPlayerJoinedMessage(lobbyId, newPlayer);
 
         return lobbyId;
     }
 
-    private void notifyOtherPlayers(String lobbyId, Player newPlayer) throws JsonProcessingException {
+    private void publishPlayerJoinedMessage(String lobbyId, Player newPlayer) throws JsonProcessingException {
         var lobby = gameCoordinator.getLobby(lobbyId);
-        var playersToNotify = lobby.getPlayers().stream().filter(c -> !Objects.equals(c.getPlayerId(), newPlayer.getPlayerId())).collect(Collectors.toList());
+        var playersToNotify = lobby.getPlayers().stream().filter(c -> !Objects.equals(c.getId(), newPlayer.getId())).collect(Collectors.toList());
 
         var payload = new NewPlayerJoinedLobbyPayload(newPlayer.getName());
         var message = new Message();
@@ -67,9 +67,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         for (Player c : playersToNotify) {
             try {
-                lobby.getSessions().get(c.getPlayerId()).sendMessage(textMessage);
+                lobby.getSessions().get(c.getId()).sendMessage(textMessage);
             } catch (IOException e) {
-                log.error("Unable to notify player {} about new Player", c.getPlayerId());
+                log.error("Unable to notify player {} about new Player", c.getId());
             }
         }
     }
