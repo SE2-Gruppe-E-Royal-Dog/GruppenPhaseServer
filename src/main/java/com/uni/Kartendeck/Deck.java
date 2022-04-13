@@ -65,4 +65,8 @@ public class Deck {
         }
         return restliche_Karten.removeFirst();
     }
+
+    public LinkedList<Karte> getDeck(){
+        return restliche_Karten;
+    }
 }
