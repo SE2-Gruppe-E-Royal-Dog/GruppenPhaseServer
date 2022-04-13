@@ -20,8 +20,8 @@ public class GameCoordinator {
 
         if (maybeAvailableLobby.isPresent()) {
             maybeAvailableLobby.get().addPlayer(player, webSocketSession);
-            log.info("Added player {} to lobby {}", player.getName(), maybeAvailableLobby.get().getLobbyId());
-            return maybeAvailableLobby.get().getLobbyId();
+            log.info("Added player {} to lobby {}", player.getName(), maybeAvailableLobby.get().getId());
+            return maybeAvailableLobby.get().getId();
         }
 
         var lobby = new Lobby();
@@ -29,12 +29,12 @@ public class GameCoordinator {
 
         lobbies.add(lobby);
 
-        log.info("Added player {} to lobby {}", player.getName(), lobby.getLobbyId());
-        return lobby.getLobbyId();
+        log.info("Added player {} to lobby {}", player.getName(), lobby.getId());
+        return lobby.getId();
     }
 
     public Lobby getLobby(String lobbyId) {
-        return lobbies.stream().filter(c -> Objects.equals(c.getLobbyId(), lobbyId)).findFirst().orElseThrow();
+        return lobbies.stream().filter(c -> Objects.equals(c.getId(), lobbyId)).findFirst().orElseThrow();
     }
 
     public List<Lobby> getLobbies() {

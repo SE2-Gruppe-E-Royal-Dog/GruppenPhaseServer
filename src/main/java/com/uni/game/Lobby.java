@@ -9,12 +9,12 @@ import java.util.*;
 @Slf4j
 @Getter
 public class Lobby {
-    private final String lobbyId;
+    private final String id;
     private final List<Player> players;
     private final Map<String, WebSocketSession> sessions;
 
     public Lobby() {
-        lobbyId = UUID.randomUUID().toString();
+        id = UUID.randomUUID().toString();
         players = new ArrayList<>();
         sessions = new HashMap<>();
     }

@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class Message {
     private MessageType type;
-    private String body;
+    private String payload;
 }

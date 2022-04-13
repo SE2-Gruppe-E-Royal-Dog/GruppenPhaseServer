@@ -24,7 +24,7 @@ class GameCoordinatorTest {
         assertThat(lobbies).hasSize(1);
         var lobby = lobbies.stream().findFirst().orElseThrow();
 
-        assertThat(lobby.getLobbyId()).isNotBlank();
+        assertThat(lobby.getId()).isNotBlank();
         assertThat(lobby.getPlayers()).hasSize(1);
 
         var playerInLobby = lobby.getPlayers().get(0);
@@ -52,7 +52,7 @@ class GameCoordinatorTest {
         assertThat(lobbies).hasSize(1);
         var lobby = lobbies.stream().findFirst().orElseThrow();
 
-        assertThat(lobby.getLobbyId()).isNotBlank();
+        assertThat(lobby.getId()).isNotBlank();
         assertThat(lobby.getPlayers()).hasSize(2);
 
         var player1InLobby = lobby.getPlayers().get(0);

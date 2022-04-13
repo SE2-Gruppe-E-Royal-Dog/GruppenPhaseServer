@@ -31,8 +31,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         switch (websocketMessage.getType()) {
             case JOIN_LOBBY:
-                var lobbyId = handleNewPlayerMessage(webSocketSession, websocketMessage.getBody());
-                webSocketSession.sendMessage(getJoinedLobbyMessage(lobbyId));
+                handleNewPlayerMessage(webSocketSession, websocketMessage.getPayload());
                 break;
         }
     }
@@ -41,16 +40,17 @@ public class WebSocketHandler extends TextWebSocketHandler {
         var payload = new JoinedLobbyPayload(lobbyId);
         var message = new Message();
         message.setType(MessageType.JOINED_LOBBY);
-        message.setBody(objectMapper.writeValueAsString(payload));
+        message.setPayload(objectMapper.writeValueAsString(payload));
         return new TextMessage(objectMapper.writeValueAsString(message));
     }
 
-    private String handleNewPlayerMessage(WebSocketSession webSocketSession, String body) throws JsonProcessingException {
+    private String handleNewPlayerMessage(WebSocketSession webSocketSession, String body) throws IOException {
         var payload = objectMapper.readValue(body, NewPlayerPayload.class);
         var newPlayer = new Player(payload.getPlayerName());
         var lobbyId = gameCoordinator.addNewPlayerToLobby(newPlayer, webSocketSession);
 
         publishPlayerJoinedMessage(lobbyId, newPlayer);
+        webSocketSession.sendMessage(getJoinedLobbyMessage(lobbyId));
 
         return lobbyId;
     }
@@ -62,7 +62,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         var payload = new NewPlayerJoinedLobbyPayload(newPlayer.getName());
         var message = new Message();
         message.setType(MessageType.NEW_PLAYER_JOINED);
-        message.setBody(objectMapper.writeValueAsString(payload));
+        message.setPayload(objectMapper.writeValueAsString(payload));
         var textMessage = new TextMessage(objectMapper.writeValueAsString(message));
 
         for (Player c : playersToNotify) {
