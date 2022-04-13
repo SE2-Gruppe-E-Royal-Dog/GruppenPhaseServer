@@ -119,7 +119,7 @@ class GameCoordinatorTest {
         assertThat(secondLobby.getPlayers()).hasSize(1);
         var player5InLobby = secondLobby.getPlayers().get(0);
         comparePlayers(player5InLobby, player5);
-        assertThat(firstLobby.getSessions()).containsEntry(player5InLobby.getId(), webSocketSession);
+        assertThat(secondLobby.getSessions()).containsEntry(player5InLobby.getId(), webSocketSession);
     }
 
     private void comparePlayers(Player player2InLobby, Player player2) {
