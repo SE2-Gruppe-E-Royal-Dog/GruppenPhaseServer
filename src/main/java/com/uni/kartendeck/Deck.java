@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Deck {
+    private static Random rand = new Random();
     private LinkedList<Karte> restlicheKarten;
 
     public Deck(){
@@ -54,7 +55,6 @@ public class Deck {
 
     private LinkedList<Karte> deckMischen(LinkedList<Karte> zuMischen) {
         LinkedList<Karte> gemischt = new LinkedList<>();
-        Random rand = new Random();
         while (!zuMischen.isEmpty()) {
             int randIndex = rand.nextInt(zuMischen.size());
             Karte karte = zuMischen.remove(randIndex);
