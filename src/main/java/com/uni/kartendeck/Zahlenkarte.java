@@ -1,4 +1,4 @@
-package com.uni.Kartendeck;
+package com.uni.kartendeck;
 
 public class Zahlenkarte extends Karte{
     private int wert;

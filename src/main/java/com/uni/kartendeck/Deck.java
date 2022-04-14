@@ -1,6 +1,8 @@
-package com.uni.Kartendeck;
+package com.uni.kartendeck;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 public class Deck {
     private LinkedList<Karte> restlicheKarten;
@@ -52,22 +54,23 @@ public class Deck {
 
     private LinkedList<Karte> deckMischen(LinkedList<Karte> zuMischen) {
         LinkedList<Karte> gemischt = new LinkedList<>();
-        while (zuMischen.size() > 0) {
-            int rand_index = (int) (Math.random() * zuMischen.size());
-            Karte karte = zuMischen.remove(rand_index);
+        Random rand = new Random();
+        while (!zuMischen.isEmpty()) {
+            int randIndex = rand.nextInt(zuMischen.size());
+            Karte karte = zuMischen.remove(randIndex);
             gemischt.add(karte);
         }
         return gemischt;
     }
 
     public Karte karteZiehen(){
-        if(restlicheKarten.size()==0){
+        if(restlicheKarten.isEmpty()){
             leeresDeckbefuellen();
         }
         return restlicheKarten.removeFirst();
     }
 
-    public LinkedList<Karte> getDeck(){
+    public List<Karte> getDeck(){
         return restlicheKarten;
     }
 }

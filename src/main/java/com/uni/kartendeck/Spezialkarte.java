@@ -1,4 +1,4 @@
-package com.uni.Kartendeck;
+package com.uni.kartendeck;
 
 public class Spezialkarte extends Karte{
     private Kartentyp kartentyp;
