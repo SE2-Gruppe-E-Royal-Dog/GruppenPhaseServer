@@ -44,10 +44,10 @@ public class Deck {
 
     private LinkedList<Karte> zusatzkartenHinzufuegen(LinkedList<Karte> list){
         for(int i=0;i<7;i++){
-            list.add(new Spezialkarte(Kartentyp.gleich));
-            list.add(new Spezialkarte(Kartentyp.tausch));
+            list.add(new Spezialkarte(Kartentyp.GLEICH));
+            list.add(new Spezialkarte(Kartentyp.TAUSCH));
             if(i<6){
-                list.add(new Spezialkarte(Kartentyp.magnet));
+                list.add(new Spezialkarte(Kartentyp.MAGNET));
             }
         }
         return list;
