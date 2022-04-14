@@ -14,7 +14,7 @@ public class Deck {
         LinkedList<Karte> list = new LinkedList<>();
         list = standardkartenHinzufuegen(list);
         list = zusatzkartenHinzufuegen(list);
-        deckMischen(list);
+        restlicheKarten = deckMischen(list);
     }
 
     private LinkedList<Karte> standardkartenHinzufuegen(LinkedList<Karte> list){
@@ -50,13 +50,14 @@ public class Deck {
         return list;
     }
 
-    private void deckMischen(LinkedList<Karte> zuMischen) {
-        //fügt die Karten in beliebiger Reihenfolge in "restliche_Karten" ein
+    private LinkedList<Karte> deckMischen(LinkedList<Karte> zuMischen) {
+        LinkedList<Karte> gemischt = new LinkedList<>();
         while (zuMischen.size() > 0) {
             int rand_index = (int) (Math.random() * zuMischen.size());
             Karte karte = zuMischen.remove(rand_index);
-            restlicheKarten.add(karte);
+            gemischt.add(karte);
         }
+        return gemischt;
     }
 
     public Karte karteZiehen(){
