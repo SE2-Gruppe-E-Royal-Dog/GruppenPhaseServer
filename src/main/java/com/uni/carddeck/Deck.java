@@ -53,14 +53,14 @@ public class Deck {
         return list;
     }
 
-    private LinkedList<Card> shuffleDeck(LinkedList<Card> zuMischen) {
-        LinkedList<Card> gemischt = new LinkedList<>();
-        while (!zuMischen.isEmpty()) {
-            int randIndex = rand.nextInt(zuMischen.size());
-            Card karte = zuMischen.remove(randIndex);
-            gemischt.add(karte);
+    private LinkedList<Card> shuffleDeck(LinkedList<Card> toShuffle) {
+        LinkedList<Card> shuffled = new LinkedList<>();
+        while (!toShuffle.isEmpty()) {
+            int randIndex = rand.nextInt(toShuffle.size());
+            Card card = toShuffle.remove(randIndex);
+            shuffled.add(card);
         }
-        return gemischt;
+        return shuffled;
     }
 
     public Card drawCard(){
