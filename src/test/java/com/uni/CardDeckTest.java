@@ -1,12 +1,12 @@
 package com.uni;
 
-import com.uni.kartendeck.*;
+import com.uni.carddeck.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class KartendeckTest {
+public class CardDeckTest {
 
     private Deck deck;
 
@@ -21,18 +21,18 @@ public class KartendeckTest {
     }
 
     @Test
-    public void deckWirdBefuellt(){
+    public void deckIsFilled(){
         Assertions.assertEquals(110,deck.getDeck().size());
     }
 
     @Test
-    public void deckNeuMischen(){
+    public void deckRefillWhenEmpty(){
         for(int i=0;i<110;i++){
-            deck.karteZiehen();
+            deck.drawCard();
         }
         //Deck ist leer
         Assertions.assertEquals(0,deck.getDeck().size());
-        deck.karteZiehen();
+        deck.drawCard();
         Assertions.assertEquals(109,deck.getDeck().size());
     }
 }
