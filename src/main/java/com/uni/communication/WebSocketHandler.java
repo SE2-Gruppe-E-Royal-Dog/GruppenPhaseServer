@@ -1,5 +1,8 @@
 package com.uni.communication;
 
+import static com.uni.communication.dto.MessageType.CHEATING_TILT;
+import static com.uni.communication.dto.MessageType.JOIN_LOBBY;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uni.communication.dto.*;
@@ -29,10 +32,18 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         var websocketMessage = objectMapper.readValue(textMessage.getPayload(), Message.class);
 
-        // convert to switch after we handle more types of messages
-        if (websocketMessage.getType() == MessageType.JOIN_LOBBY) {
-            handleNewPlayerMessage(webSocketSession, websocketMessage.getPayload());
+
+        switch (websocketMessage.getType()){
+            case JOIN_LOBBY:
+                handleNewPlayerMessage(webSocketSession, websocketMessage.getPayload());
+                break;
+            case CHEATING_TILT:
+                //TODO add handling of cheating
+                break;
+            default:
+                break;
         }
+
     }
 
     private TextMessage getJoinedLobbyMessage(String lobbyId) throws JsonProcessingException {
