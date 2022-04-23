@@ -22,32 +22,32 @@ public class Deck {
 
     private LinkedList<Card> addStandardCards(LinkedList<Card> list){
         for(int i=0;i<7;i++){
-            list.add(new NumberCard(2));
-            list.add(new NumberCard(3));
-            list.add(new NumberCard(4));
-            list.add(new NumberCard(5));
-            list.add(new NumberCard(6));
-            list.add(new NumberCard(7));
-            list.add(new NumberCard(8));
-            list.add(new NumberCard(9));
-            list.add(new NumberCard(10));
-            list.add(new NumberCard(11));
-            list.add(new NumberCard(12));
-            list.add(new NumberCard(13));
+            list.add(new Card(Cardtype.TWO));
+            list.add(new Card(Cardtype.THREE));
+            list.add(new Card(Cardtype.FOUR_PLUSMINUS));
+            list.add(new Card(Cardtype.FIVE));
+            list.add(new Card(Cardtype.SIX));
+            list.add(new Card(Cardtype.ONETOSEVEN));
+            list.add(new Card(Cardtype.EIGTH));
+            list.add(new Card(Cardtype.NINE));
+            list.add(new Card(Cardtype.TEN));
+            list.add(new Card(Cardtype.ONEORELEVEN_START));
+            list.add(new Card(Cardtype.TWELVE));
+            list.add(new Card(Cardtype.THIRTEEN_START));
         }
         for(int i=0;i<3;i++){
-            list.add(new NumberCard(11));
-            list.add(new NumberCard(13));
+            list.add(new Card(Cardtype.ONEORELEVEN_START));
+            list.add(new Card(Cardtype.THIRTEEN_START));
         }
         return list;
     }
 
     private LinkedList<Card> addAdditionalCards(LinkedList<Card> list){
         for(int i=0;i<7;i++){
-            list.add(new SpecialCard(Cardtype.EQUAL));
-            list.add(new SpecialCard(Cardtype.SWITCH));
+            list.add(new Card(Cardtype.EQUAL));
+            list.add(new Card(Cardtype.SWITCH));
             if(i<6){
-                list.add(new SpecialCard(Cardtype.MAGNET));
+                list.add(new Card(Cardtype.MAGNET));
             }
         }
         return list;

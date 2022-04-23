@@ -1,6 +1,9 @@
 package com.uni.carddeck;
 
-public abstract class Card {
+public class Card {
+    Cardtype cardtype;
 
-    public abstract void activate();
+    protected Card(Cardtype cardtype){
+        this.cardtype = cardtype;
+    }
 }
