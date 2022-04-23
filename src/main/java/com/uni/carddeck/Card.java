@@ -6,4 +6,8 @@ public class Card {
     protected Card(Cardtype cardtype){
         this.cardtype = cardtype;
     }
+
+    public Cardtype getCardtype() {
+        return cardtype;
+    }
 }
