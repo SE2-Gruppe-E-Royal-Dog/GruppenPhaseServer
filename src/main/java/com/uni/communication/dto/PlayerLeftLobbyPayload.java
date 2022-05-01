@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class JoinedLobbyPayload {
-    String lobbyId;
-    String playerId;
+public class PlayerLeftLobbyPayload {
+    String playerName;
 }
