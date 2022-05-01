@@ -29,13 +29,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         var websocketMessage = objectMapper.readValue(textMessage.getPayload(), Message.class);
 
-        switch (websocketMessage.getType()) {
-            case JOIN_LOBBY:
-                handleNewPlayerMessage(webSocketSession, websocketMessage.getPayload());
-                break;
-            case LEAVE_LOBBY:
-                handleLeaveLobbyMessage(websocketMessage.getPayload());
-                break;
+        if (websocketMessage.getType() == MessageType.JOIN_LOBBY) {
+            handleNewPlayerMessage(webSocketSession, websocketMessage.getPayload());
+        } else if (websocketMessage.getType() == MessageType.LEAVE_LOBBY) {
+            handleLeaveLobbyMessage(websocketMessage.getPayload());
         }
     }
 
