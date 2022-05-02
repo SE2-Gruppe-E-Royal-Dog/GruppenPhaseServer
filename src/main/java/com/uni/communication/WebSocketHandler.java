@@ -1,5 +1,10 @@
 package com.uni.communication;
 
+
+import static com.uni.communication.dto.MessageType.CHEATING_TILT_LEFT;
+import static com.uni.communication.dto.MessageType.CHEATING_TILT_RIGHT;
+import static com.uni.communication.dto.MessageType.JOIN_LOBBY;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uni.communication.dto.*;
@@ -29,11 +34,25 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         var websocketMessage = objectMapper.readValue(textMessage.getPayload(), Message.class);
 
-        if (websocketMessage.getType() == MessageType.JOIN_LOBBY) {
-            handleNewPlayerMessage(webSocketSession, websocketMessage.getPayload());
-        } else if (websocketMessage.getType() == MessageType.LEAVE_LOBBY) {
-            handleLeaveLobbyMessage(websocketMessage.getPayload());
+
+        switch (websocketMessage.getType()){
+            case MessageType.JOIN_LOBBY:
+                handleNewPlayerMessage(webSocketSession, websocketMessage.getPayload());
+                break;
+            case MessageType.LEAVE_LOBBY:
+                handleLeaveLobbyMessage(websocketMessage.getPayload());
+                break;
+            case MessageType.CHEATING_TILT_RIGHT:
+                //TODO add handling of cheating
+                break;
+            case MessageType.CHEATING_TILT_LEFT:
+                //TODO add handling of cheating
+                break;
+            default:
+                break;
+
         }
+
     }
 
     private void handleLeaveLobbyMessage(String payload) throws JsonProcessingException {
