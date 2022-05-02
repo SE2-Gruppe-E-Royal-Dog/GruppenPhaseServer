@@ -29,14 +29,22 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         var websocketMessage = objectMapper.readValue(textMessage.getPayload(), Message.class);
 
-        // convert to switch after we handle more types of messages
         if (websocketMessage.getType() == MessageType.JOIN_LOBBY) {
             handleNewPlayerMessage(webSocketSession, websocketMessage.getPayload());
+        } else if (websocketMessage.getType() == MessageType.LEAVE_LOBBY) {
+            handleLeaveLobbyMessage(websocketMessage.getPayload());
         }
     }
 
-    private TextMessage getJoinedLobbyMessage(String lobbyId) throws JsonProcessingException {
-        var payload = new JoinedLobbyPayload(lobbyId);
+    private void handleLeaveLobbyMessage(String payload) throws JsonProcessingException {
+        var leaveLobbyPayload = objectMapper.readValue(payload, LeaveLobbyPayload.class);
+        var playerName = gameCoordinator.removePlayerFromLobbyAndReturnPlayerName(leaveLobbyPayload.getLobbyId(), leaveLobbyPayload.getPlayerId());
+
+        publishPlayerLeftMessage(leaveLobbyPayload.getLobbyId(), leaveLobbyPayload.getPlayerId(), playerName);
+    }
+
+    private TextMessage getJoinedLobbyMessage(String lobbyId, String playerId) throws JsonProcessingException {
+        var payload = new JoinedLobbyPayload(lobbyId, playerId);
         var message = new Message();
         message.setType(MessageType.JOINED_LOBBY);
         message.setPayload(objectMapper.writeValueAsString(payload));
@@ -49,7 +57,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
         var lobbyId = gameCoordinator.addNewPlayerToLobby(newPlayer, webSocketSession);
 
         publishPlayerJoinedMessage(lobbyId, newPlayer);
-        webSocketSession.sendMessage(getJoinedLobbyMessage(lobbyId));
+        webSocketSession.sendMessage(getJoinedLobbyMessage(lobbyId, newPlayer.getId()));
 
         return lobbyId;
     }
@@ -65,6 +73,25 @@ public class WebSocketHandler extends TextWebSocketHandler {
         var textMessage = new TextMessage(objectMapper.writeValueAsString(message));
 
         for (Player c : playersToNotify) {
+            try {
+                lobby.getSessions().get(c.getId()).sendMessage(textMessage);
+            } catch (IOException e) {
+                log.error("Unable to notify player {} about new Player", c.getId());
+            }
+        }
+    }
+
+    private void publishPlayerLeftMessage(String lobbyId, String playerId, String playerName) throws JsonProcessingException {
+        var lobby = gameCoordinator.getLobby(lobbyId);
+        var playersToNotify = lobby.getPlayers().stream().filter(c -> !Objects.equals(c.getId(), playerId)).collect(Collectors.toList());
+
+        var payload = new PlayerLeftLobbyPayload(playerName);
+        var message = new Message();
+        message.setType(MessageType.PLAYER_LEFT_LOBBY);
+        message.setPayload(objectMapper.writeValueAsString(payload));
+        var textMessage = new TextMessage(objectMapper.writeValueAsString(message));
+
+        for (var c : playersToNotify) {
             try {
                 lobby.getSessions().get(c.getId()).sendMessage(textMessage);
             } catch (IOException e) {

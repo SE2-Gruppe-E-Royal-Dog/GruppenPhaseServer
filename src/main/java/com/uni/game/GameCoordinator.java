@@ -33,6 +33,11 @@ public class GameCoordinator {
         return lobby.getId();
     }
 
+    public String removePlayerFromLobbyAndReturnPlayerName(String lobbyId, String playerId) {
+        var lobby = getLobby(lobbyId);
+        return lobby.removePlayerAndReturnPlayerName(playerId);
+    }
+
     public Lobby getLobby(String lobbyId) {
         return lobbies.stream().filter(c -> Objects.equals(c.getId(), lobbyId)).findFirst().orElseThrow();
     }
@@ -40,4 +45,6 @@ public class GameCoordinator {
     public List<Lobby> getLobbies() {
         return lobbies;
     }
+
+
 }

@@ -25,14 +25,14 @@ class WebSocketHandlerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    void givenJoinLobbyMessage_whenNoLobbyExists_expectSendJoinedLobbyMessageIsSend() throws Exception {
+    void givenJoinLobbyMessage_whenNoLobbyExists_expectJoinedLobbyMessageIsSend() throws Exception {
         var msg = new Message();
         msg.setType(MessageType.JOIN_LOBBY);
         var payload = new NewPlayerPayload();
         payload.setPlayerName("player-1");
         msg.setPayload(objectMapper.writeValueAsString(payload));
-        var gamecoordinator = new GameCoordinator();
-        var webSocketHandler = new WebSocketHandler(gamecoordinator);
+        var gameCoordinator = new GameCoordinator();
+        var webSocketHandler = new WebSocketHandler(gameCoordinator);
         webSocketHandler.handleTextMessage(webSocketSession, new TextMessage(objectMapper.writeValueAsString(msg)));
         var argumentCaptor = ArgumentCaptor.forClass(TextMessage.class);
         verify(webSocketSession).sendMessage(argumentCaptor.capture());
@@ -40,8 +40,8 @@ class WebSocketHandlerTest {
         var sendMessage = objectMapper.readValue(argumentCaptor.getValue().getPayload(), Message.class);
         assertThat(sendMessage.getType()).isEqualTo(MessageType.JOINED_LOBBY);
 
-        assertThat(gamecoordinator.getLobbies()).hasSize(1);
-        var lobby = gamecoordinator.getLobbies().get(0);
+        assertThat(gameCoordinator.getLobbies()).hasSize(1);
+        var lobby = gameCoordinator.getLobbies().get(0);
         assertThat(lobby.getPlayers()).hasSize(1);
 
         var player = lobby.getPlayers().get(0);
@@ -49,22 +49,23 @@ class WebSocketHandlerTest {
 
         var joinedLobbyPayload = objectMapper.readValue(sendMessage.getPayload(), JoinedLobbyPayload.class);
         assertThat(joinedLobbyPayload.getLobbyId()).isEqualTo(lobby.getId());
+        assertThat(joinedLobbyPayload.getPlayerId()).isEqualTo(player.getId());
     }
 
     @Test
-    void givenJoinLobbyMessage_whenALobbyWithAnotherPlayerExists_expectSendJoinedLobbyMessageIsSendAndNewPlayerJoinedMessageIsSend() throws Exception {
+    void givenJoinLobbyMessage_whenALobbyWithAnotherPlayerExists_expectJoinedLobbyMessageIsSendAndNewPlayerJoinedMessageIsSend() throws Exception {
         var msg = new Message();
         msg.setType(MessageType.JOIN_LOBBY);
         var payload = new NewPlayerPayload();
         payload.setPlayerName("player-2");
         msg.setPayload(objectMapper.writeValueAsString(payload));
 
-        var gamecoordinator = new GameCoordinator();
+        var gameCoordinator = new GameCoordinator();
 
         var player1WebSocketSession = mock(WebSocketSession.class);
-        gamecoordinator.addNewPlayerToLobby(new Player("player-1"), player1WebSocketSession);
+        gameCoordinator.addNewPlayerToLobby(new Player("player-1"), player1WebSocketSession);
 
-        var webSocketHandler = new WebSocketHandler(gamecoordinator);
+        var webSocketHandler = new WebSocketHandler(gameCoordinator);
         webSocketHandler.handleTextMessage(webSocketSession, new TextMessage(objectMapper.writeValueAsString(msg)));
         var joinedLobbyCaptor = ArgumentCaptor.forClass(TextMessage.class);
         verify(webSocketSession).sendMessage(joinedLobbyCaptor.capture());
@@ -72,8 +73,8 @@ class WebSocketHandlerTest {
         var joinedLobbyMessage = objectMapper.readValue(joinedLobbyCaptor.getValue().getPayload(), Message.class);
         assertThat(joinedLobbyMessage.getType()).isEqualTo(MessageType.JOINED_LOBBY);
 
-        assertThat(gamecoordinator.getLobbies()).hasSize(1);
-        var lobby = gamecoordinator.getLobbies().get(0);
+        assertThat(gameCoordinator.getLobbies()).hasSize(1);
+        var lobby = gameCoordinator.getLobbies().get(0);
         assertThat(lobby.getPlayers()).hasSize(2);
 
         var player1InPayload = lobby.getPlayers().get(0);
@@ -93,6 +94,37 @@ class WebSocketHandlerTest {
 
         var newPlayerJoinedPayload = objectMapper.readValue(anotherPlayerJoinedTheLobbyMessage.getPayload(), NewPlayerJoinedLobbyPayload.class);
         assertThat(newPlayerJoinedPayload.getPlayerName()).isEqualTo("player-2");
+    }
 
+    @Test
+    void givenLeaveLobbyMessage_expectLeftLobbyMessageIsSend() throws Exception {
+        var gameCoordinator = new GameCoordinator();
+
+        var player = new Player("player-1");
+        var player2 = new Player("player-2");
+
+        gameCoordinator.addNewPlayerToLobby(player, webSocketSession);
+        gameCoordinator.addNewPlayerToLobby(player2, webSocketSession);
+        var webSocketHandler = new WebSocketHandler(gameCoordinator);
+
+        var lobby = gameCoordinator.getLobbies().get(0);
+        var player1 = lobby.getPlayers().get(0);
+
+        var msg = new Message();
+        msg.setType(MessageType.LEAVE_LOBBY);
+        var payload = new LeaveLobbyPayload();
+        payload.setPlayerId(player1.getId());
+        payload.setLobbyId(lobby.getId());
+        msg.setPayload(objectMapper.writeValueAsString(payload));
+
+        webSocketHandler.handleTextMessage(webSocketSession, new TextMessage(objectMapper.writeValueAsString(msg)));
+        var argumentCaptor = ArgumentCaptor.forClass(TextMessage.class);
+        verify(webSocketSession).sendMessage(argumentCaptor.capture());
+
+        var sendMessage = objectMapper.readValue(argumentCaptor.getValue().getPayload(), Message.class);
+        assertThat(sendMessage.getType()).isEqualTo(MessageType.PLAYER_LEFT_LOBBY);
+        var leftLobbyPayload = objectMapper.readValue(sendMessage.getPayload(), PlayerLeftLobbyPayload.class);
+
+        assertThat(leftLobbyPayload.getPlayerName()).isEqualTo("player-1");
     }
 }
