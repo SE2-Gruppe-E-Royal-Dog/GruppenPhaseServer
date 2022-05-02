@@ -4,6 +4,7 @@ package com.uni.communication;
 import static com.uni.communication.dto.MessageType.CHEATING_TILT_LEFT;
 import static com.uni.communication.dto.MessageType.CHEATING_TILT_RIGHT;
 import static com.uni.communication.dto.MessageType.JOIN_LOBBY;
+import static com.uni.communication.dto.MessageType.LEAVE_LOBBY;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,16 +37,16 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
 
         switch (websocketMessage.getType()){
-            case MessageType.JOIN_LOBBY:
+            case JOIN_LOBBY:
                 handleNewPlayerMessage(webSocketSession, websocketMessage.getPayload());
                 break;
-            case MessageType.LEAVE_LOBBY:
+            case LEAVE_LOBBY:
                 handleLeaveLobbyMessage(websocketMessage.getPayload());
                 break;
-            case MessageType.CHEATING_TILT_RIGHT:
+            case CHEATING_TILT_RIGHT:
                 //TODO add handling of cheating
                 break;
-            case MessageType.CHEATING_TILT_LEFT:
+            case CHEATING_TILT_LEFT:
                 //TODO add handling of cheating
                 break;
             default:
