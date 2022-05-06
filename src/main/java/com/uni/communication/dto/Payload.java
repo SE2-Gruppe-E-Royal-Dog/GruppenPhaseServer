@@ -1,19 +1,19 @@
 package com.uni.communication.dto;
 
 public abstract class Payload {
-    private final int lobbyID;
-    private final int playerID;
+    private final String lobbyID;
+    private final String playerID;
 
-    public Payload(int lobbyID, int playerID) {
+    public Payload(String lobbyID, String playerID) {
         this.lobbyID = lobbyID;
         this.playerID = playerID;
     }
 
-    public int getLobbyID() {
+    public String getLobbyID() {
         return lobbyID;
     }
 
-    public int getPlayerID() {
+    public String getPlayerID() {
         return playerID;
     }
 }
