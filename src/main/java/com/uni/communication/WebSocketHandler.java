@@ -8,8 +8,11 @@ import static com.uni.communication.dto.MessageType.LEAVE_LOBBY;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uni.carddeck.Card;
+import com.uni.carddeck.Deck;
 import com.uni.communication.dto.*;
 import com.uni.game.GameCoordinator;
+import com.uni.game.Lobby;
 import com.uni.game.Player;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.TextMessage;
@@ -17,6 +20,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -51,6 +55,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 break;
             case REQUEST_CARDS:
                 //TODO add handling of Card request
+                handleRequestCardsMessage(websocketMessage.getPayload());
                 break;
             default:
                 break;
@@ -123,5 +128,29 @@ public class WebSocketHandler extends TextWebSocketHandler {
         }
     }
 
+    private void handleRequestCardsMessage(String requestCardsPayload) throws IOException {
+        var payload = objectMapper.readValue(requestCardsPayload, RequestCardsPayload.class);
 
+        String lobbyID = payload.getLobbyID();
+        Lobby lobby = gameCoordinator.getLobby(lobbyID);
+
+        if(payload.isSendAll()){
+            for(Player p:lobby.getPlayers()){
+                LinkedList<Card> cards = new LinkedList<>();
+                for(int i=0;i<payload.getNumOfRequestedCards();i++){
+                    cards.add(lobby.getDeck().drawCard());
+                }
+                SendCardsPayload payloadToBeSent = new SendCardsPayload(lobbyID, p.getId(), cards);
+                //sendMessage(SEND_CARDS, payloadToBeSent); <- sendMessage muss noch implementiert werden
+            }
+        }else{
+            String playerID = payload.getPlayerID();
+            LinkedList<Card> cards = new LinkedList<>();
+            for(int i=0;i<payload.getNumOfRequestedCards();i++){
+                cards.add(lobby.getDeck().drawCard());
+            }
+            SendCardsPayload payloadToBeSent = new SendCardsPayload(lobbyID, playerID, cards);
+            //sendMessage(SEND_CARDS, payloadToBeSent); <- sendMessage muss noch implementiert werden
+        }
+    }
 }
