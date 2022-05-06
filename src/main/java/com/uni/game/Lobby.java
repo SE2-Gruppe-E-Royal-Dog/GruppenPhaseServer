@@ -1,5 +1,6 @@
 package com.uni.game;
 
+import com.uni.carddeck.Deck;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.WebSocketSession;
@@ -12,11 +13,13 @@ public class Lobby {
     private final String id;
     private final List<Player> players;
     private final Map<String, WebSocketSession> sessions;
+    private Deck deck;
 
     public Lobby() {
         id = UUID.randomUUID().toString();
         players = new ArrayList<>();
         sessions = new HashMap<>();
+        deck = new Deck();
     }
 
     public void addPlayer(Player player, WebSocketSession webSocketSession) {
