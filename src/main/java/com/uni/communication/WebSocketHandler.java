@@ -49,6 +49,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
             case CHEATING_TILT_LEFT:
                 //TODO add handling of cheating
                 break;
+            case REQUEST_CARDS:
+                //TODO add handling of Card request
+                break;
             default:
                 break;
 
