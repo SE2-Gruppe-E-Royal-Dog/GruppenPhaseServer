@@ -54,7 +54,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 //TODO add handling of cheating
                 break;
             case REQUEST_CARDS:
-                //TODO add handling of Card request
                 handleRequestCardsMessage(websocketMessage.getPayload());
                 break;
             default:
@@ -88,6 +87,27 @@ public class WebSocketHandler extends TextWebSocketHandler {
         webSocketSession.sendMessage(getJoinedLobbyMessage(lobbyId, newPlayer.getId()));
 
         return lobbyId;
+    }
+
+    private void sendCards(String lobbyID, String playerID, int numOfCards) throws JsonProcessingException{
+
+        LinkedList<Card> cards = new LinkedList<>();
+        for(int i=0;i<numOfCards;i++){
+            cards.add(gameCoordinator.getLobby(lobbyID).getDeck().drawCard());
+        }
+
+        var payload = new SendCardsPayload(cards);
+        var message = new Message();
+        message.setType(MessageType.SEND_CARDS);
+        message.setPayload(objectMapper.writeValueAsString(payload));
+        var textMessage = new TextMessage(objectMapper.writeValueAsString(message));
+
+        var lobby = gameCoordinator.getLobby(lobbyID);
+        try {
+            lobby.getSessions().get(playerID).sendMessage(textMessage);
+        } catch (IOException e) {
+            log.error("Unable to notify player {} about new Player", playerID);
+        }
     }
 
     private void publishPlayerJoinedMessage(String lobbyId, Player newPlayer) throws JsonProcessingException {
@@ -132,25 +152,16 @@ public class WebSocketHandler extends TextWebSocketHandler {
         var payload = objectMapper.readValue(requestCardsPayload, RequestCardsPayload.class);
 
         String lobbyID = payload.getLobbyID();
+        int numOfCards = payload.getNumOfRequestedCards();
         Lobby lobby = gameCoordinator.getLobby(lobbyID);
 
         if(payload.isSendAll()){
             for(Player p:lobby.getPlayers()){
-                LinkedList<Card> cards = new LinkedList<>();
-                for(int i=0;i<payload.getNumOfRequestedCards();i++){
-                    cards.add(lobby.getDeck().drawCard());
-                }
-                SendCardsPayload payloadToBeSent = new SendCardsPayload(lobbyID, p.getId(), cards);
-                //sendMessage(SEND_CARDS, payloadToBeSent); <- sendMessage muss noch implementiert werden
+                sendCards(lobbyID, p.getId(), numOfCards);
             }
         }else{
             String playerID = payload.getPlayerID();
-            LinkedList<Card> cards = new LinkedList<>();
-            for(int i=0;i<payload.getNumOfRequestedCards();i++){
-                cards.add(lobby.getDeck().drawCard());
-            }
-            SendCardsPayload payloadToBeSent = new SendCardsPayload(lobbyID, playerID, cards);
-            //sendMessage(SEND_CARDS, payloadToBeSent); <- sendMessage muss noch implementiert werden
+            sendCards(lobbyID,playerID,numOfCards);
         }
     }
 }
