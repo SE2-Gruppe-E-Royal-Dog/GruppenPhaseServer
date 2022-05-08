@@ -4,7 +4,7 @@ public class RequestCardsPayload extends Payload{
     boolean sendAll;
     int numOfRequestedCards;
 
-    public RequestCardsPayload(int lobbyID, int playerID, boolean sendAll, int numOfRequestedCards) {
+    public RequestCardsPayload(String lobbyID, String playerID, boolean sendAll, int numOfRequestedCards) {
         super(lobbyID, playerID);
         this.sendAll = sendAll;
         this.numOfRequestedCards = numOfRequestedCards;
