@@ -1,11 +1,14 @@
 package com.uni.communication.dto;
 
-public class RequestCardsPayload extends Payload{
+public class RequestCardsPayload{
+    private final String lobbyID;
+    private final String playerID;
     boolean sendAll;
     int numOfRequestedCards;
 
     public RequestCardsPayload(String lobbyID, String playerID, boolean sendAll, int numOfRequestedCards) {
-        super(lobbyID, playerID);
+        this.lobbyID = lobbyID;
+        this.playerID = playerID;
         this.sendAll = sendAll;
         this.numOfRequestedCards = numOfRequestedCards;
     }
@@ -16,5 +19,13 @@ public class RequestCardsPayload extends Payload{
 
     public int getNumOfRequestedCards() {
         return numOfRequestedCards;
+    }
+
+    public String getLobbyID() {
+        return lobbyID;
+    }
+
+    public String getPlayerID() {
+        return playerID;
     }
 }
