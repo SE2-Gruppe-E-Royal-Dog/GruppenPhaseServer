@@ -8,5 +8,6 @@ public enum MessageType {
     CHEATING_TILT_LEFT,
     PLAYER_LEFT_LOBBY,
     LEAVE_LOBBY,
-    REQUEST_CARDS
+    REQUEST_CARDS,
+    SEND_CARDS
 }
