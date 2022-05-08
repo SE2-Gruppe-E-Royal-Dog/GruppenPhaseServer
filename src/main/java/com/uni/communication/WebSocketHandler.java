@@ -1,11 +1,6 @@
 package com.uni.communication;
 
 
-import static com.uni.communication.dto.MessageType.CHEATING_TILT_LEFT;
-import static com.uni.communication.dto.MessageType.CHEATING_TILT_RIGHT;
-import static com.uni.communication.dto.MessageType.JOIN_LOBBY;
-import static com.uni.communication.dto.MessageType.LEAVE_LOBBY;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uni.communication.dto.*;
@@ -19,6 +14,8 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.uni.communication.dto.MessageType.*;
 
 @Slf4j
 public class WebSocketHandler extends TextWebSocketHandler {
@@ -48,6 +45,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 break;
             case CHEATING_TILT_LEFT:
                 //TODO add handling of cheating
+                break;
+            case START_GAME:
+                handleGameStartMessage(websocketMessage.getPayload());
                 break;
             default:
                 break;
@@ -120,5 +120,31 @@ public class WebSocketHandler extends TextWebSocketHandler {
         }
     }
 
+    private void handleGameStartMessage(String payload) throws JsonProcessingException {
+
+        var newPayload = objectMapper.readValue(payload, StartGamePayload.class);
+
+        var lobby = gameCoordinator.getLobby(newPayload.getLobbyID());
+        var playersToNotify = lobby.getPlayers();
+
+        var message = new Message();
+        message.setType(START_GAME);
+
+        newPayload.setNumberOfPlayers(playersToNotify.size());
+        int i = 0;
+        for (var c : playersToNotify) {
+            try {
+                newPayload.setClientPlayerNumber(i++);
+                message.setPayload(objectMapper.writeValueAsString(newPayload));
+                var textMessage = new TextMessage(objectMapper.writeValueAsString(message));
+
+                lobby.getSessions().get(c.getId()).sendMessage(textMessage);
+            } catch (IOException e) {
+                log.error("Unable to notify player {} about new Player", c.getId());
+            }
+        }
+
+
+    }
 
 }
