@@ -9,6 +9,7 @@ public enum MessageType {
     PLAYER_LEFT_LOBBY,
     LEAVE_LOBBY,
     START_GAME,
-    UPDATE_BOARD
+    UPDATE_BOARD,
+    WORMHOLE_MOVE
 
 }
