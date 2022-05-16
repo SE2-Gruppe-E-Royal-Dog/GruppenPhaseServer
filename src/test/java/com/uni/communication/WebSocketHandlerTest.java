@@ -151,7 +151,7 @@ class WebSocketHandlerTest {
 
         Message message = new Message();
         message.setType(MessageType.UPDATE_BOARD);
-        UpdateBoardPayload payload = new UpdateBoardPayload(1, 23, -1, -1, 2, 0, lobby.getId());
+        UpdateBoardPayload payload = new UpdateBoardPayload(1, -1, 23, -1, 2, 0, lobby.getId());
         message.setPayload(objectMapper.writeValueAsString(payload));
 
         webSocketHandler.handleTextMessage(webSocketSession, new TextMessage(objectMapper.writeValueAsString(message)));
@@ -162,13 +162,13 @@ class WebSocketHandlerTest {
         assertThat(sendMessage.getType()).isEqualTo(MessageType.UPDATE_BOARD);
         var resultPayload = objectMapper.readValue(sendMessage.getPayload(), UpdateBoardPayload.class);
 
-        assertThat(resultPayload.getCardType() == 2);
-        assertThat(resultPayload.getCheatModifier() == 0);
-        assertThat(resultPayload.getFigure1ID() == 1);
-        assertThat(resultPayload.getFigure2ID() == -1);
-        assertThat(resultPayload.getLobbyID()== lobby.getId());
-        assertThat(resultPayload.getNewField1ID()== 23);
-        assertThat(resultPayload.getNewField2ID()== -1);
+        assertThat(resultPayload.getCardType()).isEqualTo(2);
+        assertThat(resultPayload.getCheatModifier()).isEqualTo(0);
+        assertThat(resultPayload.getFigure1ID()).isEqualTo(1);
+        assertThat(resultPayload.getFigure2ID()).isEqualTo(-1);
+        assertThat(resultPayload.getLobbyID()).isEqualTo(lobby.getId());
+        assertThat(resultPayload.getNewField1ID()).isEqualTo(23);
+        assertThat(resultPayload.getNewField2ID()).isEqualTo(-1);
     }
 
 }
