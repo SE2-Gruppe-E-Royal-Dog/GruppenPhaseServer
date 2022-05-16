@@ -59,7 +59,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
             case WORMHOLE_MOVE:
                 handleMoveWormholes(websocketMessage.getPayload());
                 break;
-                default:
             case UPDATE_BOARD:
                 handleUpdateBoard(websocketMessage.getPayload());
                 break;
