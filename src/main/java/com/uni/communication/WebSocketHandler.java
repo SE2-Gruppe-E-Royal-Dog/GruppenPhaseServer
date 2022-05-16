@@ -52,6 +52,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 break;
             case REQUEST_CARDS:
                 handleRequestCardsMessage(websocketMessage.getPayload());
+                break;
             case START_GAME:
                 handleGameStartMessage(websocketMessage.getPayload());
                 break;
