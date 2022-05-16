@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uni.communication.dto.*;
 import com.uni.game.GameCoordinator;
 import com.uni.game.Player;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -14,8 +15,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
@@ -23,6 +23,20 @@ class WebSocketHandlerTest {
     @MockBean
     private WebSocketSession webSocketSession;
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    GameCoordinator gameCoordinator;
+    Player player1;
+    Player player2;
+    WebSocketHandler webSocketHandler;
+
+
+    @BeforeEach
+    void setUp(){
+        gameCoordinator = new GameCoordinator();
+        player1 = new Player("player-1");
+        player2 = new Player("player-2");
+        webSocketHandler = new WebSocketHandler(gameCoordinator);
+    }
 
     @Test
     void givenJoinLobbyMessage_whenNoLobbyExists_expectJoinedLobbyMessageIsSend() throws Exception {
@@ -127,4 +141,34 @@ class WebSocketHandlerTest {
 
         assertThat(leftLobbyPayload.getPlayerName()).isEqualTo("player-1");
     }
+
+    @Test
+    void testUpdateBoard()throws Exception{
+
+        gameCoordinator.addNewPlayerToLobby(player1, webSocketSession);
+        gameCoordinator.addNewPlayerToLobby(player2, webSocketSession);
+        var lobby = gameCoordinator.getLobbies().get(0);
+
+        Message message = new Message();
+        message.setType(MessageType.UPDATE_BOARD);
+        UpdateBoardPayload payload = new UpdateBoardPayload(1, 23, -1, -1, 2, 0, lobby.getId());
+        message.setPayload(objectMapper.writeValueAsString(payload));
+
+        webSocketHandler.handleTextMessage(webSocketSession, new TextMessage(objectMapper.writeValueAsString(message)));
+        var argumentCaptor = ArgumentCaptor.forClass(TextMessage.class);
+        verify(webSocketSession, times(2)).sendMessage(argumentCaptor.capture());
+
+        var sendMessage = objectMapper.readValue(argumentCaptor.getValue().getPayload(), Message.class);
+        assertThat(sendMessage.getType()).isEqualTo(MessageType.UPDATE_BOARD);
+        var resultPayload = objectMapper.readValue(sendMessage.getPayload(), UpdateBoardPayload.class);
+
+        assertThat(resultPayload.getCardType() == 2);
+        assertThat(resultPayload.getCheatModifier() == 0);
+        assertThat(resultPayload.getFigure1ID() == 1);
+        assertThat(resultPayload.getFigure2ID() == -1);
+        assertThat(resultPayload.getLobbyID()== lobby.getId());
+        assertThat(resultPayload.getNewField1ID()== 23);
+        assertThat(resultPayload.getNewField2ID()== -1);
+    }
+
 }
