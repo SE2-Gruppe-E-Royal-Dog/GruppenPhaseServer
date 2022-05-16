@@ -1,11 +1,6 @@
 package com.uni.communication;
 
 
-import static com.uni.communication.dto.MessageType.CHEATING_TILT_LEFT;
-import static com.uni.communication.dto.MessageType.CHEATING_TILT_RIGHT;
-import static com.uni.communication.dto.MessageType.JOIN_LOBBY;
-import static com.uni.communication.dto.MessageType.LEAVE_LOBBY;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uni.carddeck.Card;
@@ -23,6 +18,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.uni.communication.dto.MessageType.*;
 
 @Slf4j
 public class WebSocketHandler extends TextWebSocketHandler {
@@ -55,6 +52,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 break;
             case REQUEST_CARDS:
                 handleRequestCardsMessage(websocketMessage.getPayload());
+            case START_GAME:
+                handleGameStartMessage(websocketMessage.getPayload());
                 break;
             default:
                 break;
@@ -154,6 +153,33 @@ public class WebSocketHandler extends TextWebSocketHandler {
         String lobbyID = payload.getLobbyID();
         int numOfCards = payload.getNumOfRequestedCards();
         Lobby lobby = gameCoordinator.getLobby(lobbyID);
+
+    private void handleGameStartMessage(String payload) throws JsonProcessingException {
+
+        var newPayload = objectMapper.readValue(payload, StartGamePayload.class);
+
+        var lobby = gameCoordinator.getLobby(newPayload.getLobbyID());
+        var playersToNotify = lobby.getPlayers();
+
+        var message = new Message();
+        message.setType(START_GAME);
+
+        newPayload.setNumberOfPlayers(playersToNotify.size());
+        int i = 0;
+        for (var c : playersToNotify) {
+            try {
+                newPayload.setClientPlayerNumber(i++);
+                message.setPayload(objectMapper.writeValueAsString(newPayload));
+                var textMessage = new TextMessage(objectMapper.writeValueAsString(message));
+
+                lobby.getSessions().get(c.getId()).sendMessage(textMessage);
+            } catch (IOException e) {
+                log.error("Unable to notify player {} about new Player", c.getId());
+            }
+        }
+
+
+    }
 
         if(payload.isSendAll()){
             for(Player p:lobby.getPlayers()){

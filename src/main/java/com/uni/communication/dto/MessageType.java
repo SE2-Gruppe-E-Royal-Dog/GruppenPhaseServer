@@ -10,4 +10,6 @@ public enum MessageType {
     LEAVE_LOBBY,
     REQUEST_CARDS,
     SEND_CARDS
+    START_GAME,
+    UPDATE_BOARD
 }
