@@ -154,6 +154,16 @@ public class WebSocketHandler extends TextWebSocketHandler {
         int numOfCards = payload.getNumOfRequestedCards();
         Lobby lobby = gameCoordinator.getLobby(lobbyID);
 
+        if(payload.isSendAll()){
+            for(Player p:lobby.getPlayers()){
+                sendCards(lobbyID, p.getId(), numOfCards);
+            }
+        }else{
+            String playerID = payload.getPlayerID();
+            sendCards(lobbyID,playerID,numOfCards);
+        }
+    }
+
     private void handleGameStartMessage(String payload) throws JsonProcessingException {
 
         var newPayload = objectMapper.readValue(payload, StartGamePayload.class);
@@ -179,15 +189,5 @@ public class WebSocketHandler extends TextWebSocketHandler {
         }
 
 
-    }
-
-        if(payload.isSendAll()){
-            for(Player p:lobby.getPlayers()){
-                sendCards(lobbyID, p.getId(), numOfCards);
-            }
-        }else{
-            String playerID = payload.getPlayerID();
-            sendCards(lobbyID,playerID,numOfCards);
-        }
     }
 }

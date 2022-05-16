@@ -9,7 +9,7 @@ public enum MessageType {
     PLAYER_LEFT_LOBBY,
     LEAVE_LOBBY,
     REQUEST_CARDS,
-    SEND_CARDS
+    SEND_CARDS,
     START_GAME,
     UPDATE_BOARD
 }
