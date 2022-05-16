@@ -49,6 +49,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
             case START_GAME:
                 handleGameStartMessage(websocketMessage.getPayload());
                 break;
+            case UPDATE_BOARD:
+                handleUpdateBoard(websocketMessage.getPayload());
+                break;
             default:
                 break;
 
@@ -140,11 +143,31 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
                 lobby.getSessions().get(c.getId()).sendMessage(textMessage);
             } catch (IOException e) {
-                log.error("Unable to notify player {} about new Player", c.getId());
+                log.error("Unable to start game");
             }
         }
 
 
+    }
+    private void handleUpdateBoard(String payload)throws JsonProcessingException {
+        var newPayload = objectMapper.readValue(payload, UpdateBoardPayload.class);
+
+        var lobby = gameCoordinator.getLobby(newPayload.getLobbyID());
+        var playersToNotify = lobby.getPlayers();
+
+        var message = new Message();
+        message.setType(UPDATE_BOARD);
+
+        for (var c : playersToNotify) {
+            try {
+                message.setPayload(objectMapper.writeValueAsString(newPayload));
+                var textMessage = new TextMessage(objectMapper.writeValueAsString(message));
+
+                lobby.getSessions().get(c.getId()).sendMessage(textMessage);
+            } catch (IOException e) {
+                log.error("Unable to update board");
+            }
+        }
     }
 
 }
