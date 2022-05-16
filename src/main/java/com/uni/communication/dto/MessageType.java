@@ -11,5 +11,7 @@ public enum MessageType {
     REQUEST_CARDS,
     SEND_CARDS,
     START_GAME,
-    UPDATE_BOARD
+    UPDATE_BOARD,
+    WORMHOLE_MOVE
+
 }

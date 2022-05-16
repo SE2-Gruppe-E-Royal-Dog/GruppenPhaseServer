@@ -56,6 +56,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
             case START_GAME:
                 handleGameStartMessage(websocketMessage.getPayload());
                 break;
+            case WORMHOLE_MOVE:
+                handleMoveWormholes(websocketMessage.getPayload());
+                break;
             case UPDATE_BOARD:
                 handleUpdateBoard(websocketMessage.getPayload());
                 break;
@@ -193,6 +196,30 @@ public class WebSocketHandler extends TextWebSocketHandler {
         }
 
 
+    }
+    private void handleMoveWormholes(String payload) throws JsonProcessingException {
+
+        var newPayload = objectMapper.readValue(payload, WormholeSwitchPayload.class);
+
+        var lobby = gameCoordinator.getLobby(newPayload.getLobbyID());
+        var playersToNotify = lobby.getPlayers();
+
+        var message = new Message();
+        message.setType(WORMHOLE_MOVE);
+
+
+
+        for (var c : playersToNotify) {
+            try {
+
+                message.setPayload(objectMapper.writeValueAsString(newPayload));
+                var textMessage = new TextMessage(objectMapper.writeValueAsString(message));
+
+                lobby.getSessions().get(c.getId()).sendMessage(textMessage);
+            } catch (IOException e) {
+                log.error("Unable to notify player {} about new Player", c.getId());
+            }
+        }
     }
 
     private void handleUpdateBoard(String payload)throws JsonProcessingException {
