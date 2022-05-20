@@ -72,7 +72,7 @@ public class Deck {
 
     public List<Card> drawCards(int num){
         LinkedList<Card> list = new LinkedList<>();
-        while(num>=0){
+        while(num>0){
             list.add(drawCard());
             num--;
         }
