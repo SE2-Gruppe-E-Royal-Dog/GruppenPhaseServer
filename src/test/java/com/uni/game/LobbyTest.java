@@ -7,14 +7,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.web.socket.WebSocketSession;
 
-public class LobbyTest {
+class LobbyTest {
 
-    private Lobby lobby;
-    private Player player1;
-    private Player player2;
+    Lobby lobby;
+    Player player1;
+    Player player2;
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         player1 = new Player("1");
         player2 = new Player("2");
         lobby = new Lobby();
@@ -23,17 +23,17 @@ public class LobbyTest {
     }
 
     @AfterEach
-    public void cleanup(){
+    void cleanup(){
         lobby = null;
         player1 = null;
         player2 = null;
     }
 
     @Mock
-    private WebSocketSession webSocketSession;
+    WebSocketSession webSocketSession;
 
     @Test
-    public void getPlayerByIDTest(){
+    void getPlayerByIDTest(){
         Assertions.assertEquals(player1, lobby.getPlayerByID(player1.getId()));
     }
 }

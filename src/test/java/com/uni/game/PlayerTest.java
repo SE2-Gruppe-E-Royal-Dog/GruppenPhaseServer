@@ -5,29 +5,29 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class PlayerTest {
+class PlayerTest {
 
-    private Player player;
+    Player player;
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         player = new Player("1");
     }
 
     @AfterEach
-    public void cleanup(){
+    void cleanup(){
         player = null;
     }
 
     @Test
-    public void reduceNumOfCardsLeftTest(){
+    void reduceNumOfCardsLeftTest(){
         player.reduceCardsLeft();
 
         Assertions.assertEquals(-1,player.getNumOfCardsLeft());
     }
 
     @Test
-    public void setNumOfCardsLeftTest(){
+    void setNumOfCardsLeftTest(){
         player.setNumOfCardsLeft(10);
 
         Assertions.assertEquals(10, player.getNumOfCardsLeft());

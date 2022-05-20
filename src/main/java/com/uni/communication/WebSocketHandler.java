@@ -3,11 +3,8 @@ package com.uni.communication;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.uni.carddeck.Card;
-import com.uni.carddeck.Deck;
 import com.uni.communication.dto.*;
 import com.uni.game.GameCoordinator;
-import com.uni.game.Lobby;
 import com.uni.game.Player;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.TextMessage;
@@ -15,7 +12,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -25,6 +21,8 @@ import static com.uni.communication.dto.MessageType.*;
 public class WebSocketHandler extends TextWebSocketHandler {
     private final GameCoordinator gameCoordinator;
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private static final String unableToNotifyError = "Unable to notify player {} about new Player";
 
     public WebSocketHandler(GameCoordinator gameCoordinator) {
         this.gameCoordinator = gameCoordinator;
@@ -106,7 +104,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
             try {
                 lobby.getSessions().get(c.getId()).sendMessage(textMessage);
             } catch (IOException e) {
-                log.error("Unable to notify player {} about new Player", c.getId());
+                log.error(unableToNotifyError, c.getId());
             }
         }
     }
@@ -125,7 +123,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
             try {
                 lobby.getSessions().get(c.getId()).sendMessage(textMessage);
             } catch (IOException e) {
-                log.error("Unable to notify player {} about new Player", c.getId());
+                log.error(unableToNotifyError, c.getId());
             }
         }
     }
@@ -176,7 +174,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
                 lobby.getSessions().get(c.getId()).sendMessage(textMessage);
             } catch (IOException e) {
-                log.error("Unable to notify player {} about new Player", c.getId());
+                log.error(unableToNotifyError, c.getId());
             }
         }
     }
