@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Deck {
-    private static Random rand = new Random();
+    private static final Random rand = new Random();
     private LinkedList<Card> remainingCards;
 
     public Deck(){
@@ -68,6 +68,15 @@ public class Deck {
             fillDeck();
         }
         return remainingCards.removeFirst();
+    }
+
+    public List<Card> drawCards(int num){
+        LinkedList<Card> list = new LinkedList<>();
+        while(num>=0){
+            list.add(drawCard());
+            num--;
+        }
+        return list;
     }
 
     public List<Card> getDeck(){
