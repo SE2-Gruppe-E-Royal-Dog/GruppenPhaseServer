@@ -17,4 +17,5 @@ public class UpdateBoardPayload {
     int cardType;
     int cheatModifier;
     String lobbyID;
+    String playerID;
 }
