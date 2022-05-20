@@ -151,7 +151,7 @@ class WebSocketHandlerTest {
 
         Message message = new Message();
         message.setType(MessageType.UPDATE_BOARD);
-        UpdateBoardPayload payload = new UpdateBoardPayload(1, -1, 23, -1, 2, 0, lobby.getId());
+        UpdateBoardPayload payload = new UpdateBoardPayload(1, -1, 23, -1, 2, 0, lobby.getId(),player1.getId());
         message.setPayload(objectMapper.writeValueAsString(payload));
 
         webSocketHandler.handleTextMessage(webSocketSession, new TextMessage(objectMapper.writeValueAsString(message)));

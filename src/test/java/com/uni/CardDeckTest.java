@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.LinkedList;
+
 public class CardDeckTest {
 
     private Deck deck;
@@ -34,5 +36,12 @@ public class CardDeckTest {
         Assertions.assertEquals(0,deck.getDeck().size());
         deck.drawCard();
         Assertions.assertEquals(109,deck.getDeck().size());
+    }
+
+    @Test
+    public void drawCardsTest(){
+        LinkedList<Card> res = (LinkedList<Card>) deck.drawCards(5);
+
+        Assertions.assertEquals(5, res.size());
     }
 }
