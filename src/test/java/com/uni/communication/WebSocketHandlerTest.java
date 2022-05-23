@@ -171,4 +171,32 @@ class WebSocketHandlerTest {
         assertThat(resultPayload.getNewField2ID()).isEqualTo(-1);
     }
 
+    @Test
+    void testWormholeSwitch()throws Exception{
+
+        gameCoordinator.addNewPlayerToLobby(player1, webSocketSession);
+        gameCoordinator.addNewPlayerToLobby(player2, webSocketSession);
+        var lobby = gameCoordinator.getLobbies().get(0);
+
+        Message message = new Message();
+        message.setType(MessageType.WORMHOLE_MOVE);
+        WormholeSwitchPayload payload = new WormholeSwitchPayload(6, 22,38,54, lobby.getId());
+        message.setPayload(objectMapper.writeValueAsString(payload));
+
+        webSocketHandler.handleTextMessage(webSocketSession, new TextMessage(objectMapper.writeValueAsString(message)));
+        var argumentCaptor = ArgumentCaptor.forClass(TextMessage.class);
+        verify(webSocketSession, times(2)).sendMessage(argumentCaptor.capture());
+
+        var sendMessage = objectMapper.readValue(argumentCaptor.getValue().getPayload(), Message.class);
+        assertThat(sendMessage.getType()).isEqualTo(MessageType.WORMHOLE_MOVE);
+
+        var resultPayload = objectMapper.readValue(sendMessage.getPayload(), WormholeSwitchPayload.class);
+
+        assertThat(resultPayload.getNewWormholeFieldPosition_1()).isEqualTo(6);
+        assertThat(resultPayload.getNewWormholeFieldPosition_2()).isEqualTo(22);
+        assertThat(resultPayload.getNewWormholeFieldPosition_3()).isEqualTo(38);
+        assertThat(resultPayload.getNewWormholeFieldPosition_4()).isEqualTo(54);
+
+    }
+
 }
