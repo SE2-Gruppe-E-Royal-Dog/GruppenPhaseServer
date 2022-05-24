@@ -3,11 +3,8 @@ package com.uni.communication;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.uni.carddeck.Card;
-import com.uni.carddeck.Deck;
 import com.uni.communication.dto.*;
 import com.uni.game.GameCoordinator;
-import com.uni.game.Lobby;
 import com.uni.game.Player;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.TextMessage;
@@ -15,7 +12,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -25,6 +21,8 @@ import static com.uni.communication.dto.MessageType.*;
 public class WebSocketHandler extends TextWebSocketHandler {
     private final GameCoordinator gameCoordinator;
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private static final String unableToNotifyError = "Unable to notify player {} about new Player";
 
     public WebSocketHandler(GameCoordinator gameCoordinator) {
         this.gameCoordinator = gameCoordinator;
@@ -49,9 +47,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 break;
             case CHEATING_TILT_LEFT:
                 //TODO add handling of cheating
-                break;
-            case REQUEST_CARDS:
-                handleRequestCardsMessage(websocketMessage.getPayload());
                 break;
             case START_GAME:
                 handleGameStartMessage(websocketMessage.getPayload());
@@ -95,27 +90,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
         return lobbyId;
     }
 
-    private void sendCards(String lobbyID, String playerID, int numOfCards) throws JsonProcessingException{
-
-        LinkedList<Card> cards = new LinkedList<>();
-        for(int i=0;i<numOfCards;i++){
-            cards.add(gameCoordinator.getLobby(lobbyID).getDeck().drawCard());
-        }
-
-        var payload = new SendCardsPayload(cards);
-        var message = new Message();
-        message.setType(MessageType.SEND_CARDS);
-        message.setPayload(objectMapper.writeValueAsString(payload));
-        var textMessage = new TextMessage(objectMapper.writeValueAsString(message));
-
-        var lobby = gameCoordinator.getLobby(lobbyID);
-        try {
-            lobby.getSessions().get(playerID).sendMessage(textMessage);
-        } catch (IOException e) {
-            log.error("Unable to notify player {} about new Player", playerID);
-        }
-    }
-
     private void publishPlayerJoinedMessage(String lobbyId, Player newPlayer) throws JsonProcessingException {
         var lobby = gameCoordinator.getLobby(lobbyId);
         var playersToNotify = lobby.getPlayers().stream().filter(c -> !Objects.equals(c.getId(), newPlayer.getId())).collect(Collectors.toList());
@@ -130,7 +104,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
             try {
                 lobby.getSessions().get(c.getId()).sendMessage(textMessage);
             } catch (IOException e) {
-                log.error("Unable to notify player {} about new Player", c.getId());
+                log.error(unableToNotifyError, c.getId());
             }
         }
     }
@@ -149,25 +123,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
             try {
                 lobby.getSessions().get(c.getId()).sendMessage(textMessage);
             } catch (IOException e) {
-                log.error("Unable to notify player {} about new Player", c.getId());
+                log.error(unableToNotifyError, c.getId());
             }
-        }
-    }
-
-    private void handleRequestCardsMessage(String requestCardsPayload) throws IOException {
-        var payload = objectMapper.readValue(requestCardsPayload, RequestCardsPayload.class);
-
-        String lobbyID = payload.getLobbyID();
-        int numOfCards = payload.getNumOfRequestedCards();
-        Lobby lobby = gameCoordinator.getLobby(lobbyID);
-
-        if(payload.isSendAll()){
-            for(Player p:lobby.getPlayers()){
-                sendCards(lobbyID, p.getId(), numOfCards);
-            }
-        }else{
-            String playerID = payload.getPlayerID();
-            sendCards(lobbyID,playerID,numOfCards);
         }
     }
 
@@ -217,7 +174,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
                 lobby.getSessions().get(c.getId()).sendMessage(textMessage);
             } catch (IOException e) {
-                log.error("Unable to notify player {} about new Player", c.getId());
+                log.error(unableToNotifyError, c.getId());
             }
         }
     }
@@ -241,5 +198,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 log.error("Unable to update board");
             }
         }
+        lobby.getPlayerByID(newPayload.getPlayerID()).reduceCardsLeft();
+        lobby.dealCards();
     }
 }

@@ -6,27 +6,29 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class CardDeckTest {
+import java.util.LinkedList;
 
-    private Deck deck;
+class CardDeckTest {
+
+    Deck deck;
 
     @BeforeEach
-    public void setup(){
+    void setup(){
         deck = new Deck();
     }
 
     @AfterEach
-    public void cleanup(){
+    void cleanup(){
         deck = null;
     }
 
     @Test
-    public void deckIsFilled(){
+    void deckIsFilled(){
         Assertions.assertEquals(110,deck.getDeck().size());
     }
 
     @Test
-    public void deckRefillWhenEmpty(){
+    void deckRefillWhenEmpty(){
         for(int i=0;i<110;i++){
             deck.drawCard();
         }
@@ -34,5 +36,12 @@ public class CardDeckTest {
         Assertions.assertEquals(0,deck.getDeck().size());
         deck.drawCard();
         Assertions.assertEquals(109,deck.getDeck().size());
+    }
+
+    @Test
+    void drawCardsTest(){
+        LinkedList<Card> res = (LinkedList<Card>) deck.drawCards(5);
+
+        Assertions.assertEquals(5, res.size());
     }
 }
