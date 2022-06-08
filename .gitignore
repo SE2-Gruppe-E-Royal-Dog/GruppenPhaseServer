@@ -8,6 +8,7 @@
 *.ctxt
 
 /.idea
+/.idea/misc.xml
 /.gradle
 /build
 
