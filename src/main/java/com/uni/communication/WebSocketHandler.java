@@ -42,11 +42,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
             case LEAVE_LOBBY:
                 handleLeaveLobbyMessage(websocketMessage.getPayload());
                 break;
-            case CHEATING_TILT_RIGHT:
-                //TODO add handling of cheating
-                break;
-            case CHEATING_TILT_LEFT:
-                //TODO add handling of cheating
+            case PUNISHMENT_MESSAGE:
+                handlePunishment(websocketMessage.getPayload());
                 break;
             case START_GAME:
                 handleGameStartMessage(websocketMessage.getPayload());
@@ -200,5 +197,27 @@ public class WebSocketHandler extends TextWebSocketHandler {
         }
         lobby.getPlayerByID(newPayload.getPlayerID()).reduceCardsLeft();
         lobby.dealCards();
+    }
+
+    private void handlePunishment(String payload) throws JsonProcessingException{
+        var newPayload = objectMapper.readValue(payload, PunishPayload.class);
+
+        var lobby = gameCoordinator.getLobby(newPayload.getLobbyID());
+        var playersToNotify = lobby.getPlayers();
+
+        var message = new Message();
+        message.setType(PUNISHMENT_MESSAGE);
+
+        for (var c : playersToNotify) {
+            try {
+                message.setPayload(objectMapper.writeValueAsString(newPayload));
+                var textMessage = new TextMessage(objectMapper.writeValueAsString(message));
+
+                lobby.getSessions().get(c.getId()).sendMessage(textMessage);
+            } catch (IOException e) {
+                log.error("Unable to notify about punishment");
+            }
+        }
+
     }
 }
