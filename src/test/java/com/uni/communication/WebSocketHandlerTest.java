@@ -198,5 +198,30 @@ class WebSocketHandlerTest {
         assertThat(resultPayload.getNewWormholeFieldPosition_4()).isEqualTo(54);
 
     }
+    @Test
+    void testPunishment ()throws Exception{
+
+        gameCoordinator.addNewPlayerToLobby(player1, webSocketSession);
+        gameCoordinator.addNewPlayerToLobby(player2, webSocketSession);
+        var lobby = gameCoordinator.getLobbies().get(0);
+
+        Message message = new Message();
+        message.setType(MessageType.PUNISHMENT_MESSAGE);
+        PunishPayload payload = new PunishPayload(lobby.getId(), 2);
+        message.setPayload(objectMapper.writeValueAsString(payload));
+
+        webSocketHandler.handleTextMessage(webSocketSession, new TextMessage(objectMapper.writeValueAsString(message)));
+        var argumentCaptor = ArgumentCaptor.forClass(TextMessage.class);
+        verify(webSocketSession, times(2)).sendMessage(argumentCaptor.capture());
+
+        var sendMessage = objectMapper.readValue(argumentCaptor.getValue().getPayload(), Message.class);
+        assertThat(sendMessage.getType()).isEqualTo(MessageType.PUNISHMENT_MESSAGE);
+
+        var resultPayload = objectMapper.readValue(sendMessage.getPayload(), PunishPayload.class);
+
+        assertThat(resultPayload.getLobbyID()).isEqualTo(lobby.getId());
+        assertThat(resultPayload.getFigureID()).isEqualTo(2);
+
+    }
 
 }
