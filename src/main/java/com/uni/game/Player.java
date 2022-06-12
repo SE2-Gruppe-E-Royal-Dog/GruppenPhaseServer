@@ -23,4 +23,8 @@ public class Player {
     public void reduceCardsLeft(){
         numOfCardsLeft--;
     }
+
+    public String getNameOfPlayer(){
+        return this.name;
+    }
 }

@@ -87,4 +87,12 @@ public class Lobby {
             }
         }
     }
+
+    public LinkedList<String> getPlayerNames (){
+        LinkedList<String> names = new LinkedList<>();
+        for (Player p:players){
+            names.add(p.getNameOfPlayer());
+        }
+        return names;
+    }
 }

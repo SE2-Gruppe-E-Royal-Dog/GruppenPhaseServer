@@ -132,6 +132,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
         var lobby = gameCoordinator.getLobby(newPayload.getLobbyID());
         var playersToNotify = lobby.getPlayers();
 
+        newPayload.setPlayerNames(lobby.getPlayerNames());
+
         var message = new Message();
         message.setType(START_GAME);
 
