@@ -148,8 +148,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 log.error("Unable to start game");
             }
         }
-
-
+        lobby.dealCards();
     }
     private void handleMoveWormholes(String payload) throws JsonProcessingException {
 
