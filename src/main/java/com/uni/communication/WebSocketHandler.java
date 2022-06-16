@@ -34,7 +34,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
         var websocketMessage = objectMapper.readValue(textMessage.getPayload(), Message.class);
 
-
         switch (websocketMessage.getType()){
             case JOIN_LOBBY:
                 handleNewPlayerMessage(webSocketSession, websocketMessage.getPayload());
@@ -144,7 +143,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 newPayload.setClientPlayerNumber(i++);
                 message.setPayload(objectMapper.writeValueAsString(newPayload));
                 var textMessage = new TextMessage(objectMapper.writeValueAsString(message));
-
+                lobby.setStarted(true);
                 lobby.getSessions().get(c.getId()).sendMessage(textMessage);
             } catch (IOException e) {
                 log.error("Unable to start game");
@@ -162,11 +161,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
         var message = new Message();
         message.setType(WORMHOLE_MOVE);
 
-
-
         for (var c : playersToNotify) {
             try {
-
                 message.setPayload(objectMapper.writeValueAsString(newPayload));
                 var textMessage = new TextMessage(objectMapper.writeValueAsString(message));
 

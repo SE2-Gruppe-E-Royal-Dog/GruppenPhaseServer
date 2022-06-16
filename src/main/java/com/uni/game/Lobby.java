@@ -8,6 +8,7 @@ import com.uni.communication.dto.Message;
 import com.uni.communication.dto.MessageType;
 import com.uni.communication.dto.SendCardsPayload;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -17,11 +18,13 @@ import java.util.*;
 
 @Slf4j
 @Getter
+@Setter
 public class Lobby {
     private final String id;
     private final List<Player> players;
     private final Map<String, WebSocketSession> sessions;
     private Deck deck;
+    private boolean isStarted;
 
     public Lobby() {
         id = UUID.randomUUID().toString();
@@ -50,7 +53,7 @@ public class Lobby {
     }
 
     public boolean isNotStarted() {
-        return players.size() < 4;
+        return !isStarted;
     }
 
     public Player getPlayerByID(String playerID){
@@ -90,7 +93,7 @@ public class Lobby {
 
     public LinkedList<String> getPlayerNames (){
         LinkedList<String> names = new LinkedList<>();
-        for (Player p:players){
+        for (Player p: players){
             names.add(p.getNameOfPlayer());
         }
         return names;
