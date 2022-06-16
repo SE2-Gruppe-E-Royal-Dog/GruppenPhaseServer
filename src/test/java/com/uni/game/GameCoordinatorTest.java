@@ -88,6 +88,7 @@ class GameCoordinatorTest {
 
         var player5 = new Player("player-5");
         gameCoordinator.addNewPlayerToLobby(player5, webSocketSession);
+        gameCoordinator.getLobbies().get(0).setStarted(true);
 
         var lobbies = gameCoordinator.getLobbies();
 
