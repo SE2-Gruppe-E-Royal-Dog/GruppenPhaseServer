@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.LinkedList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,5 +16,5 @@ public class StartGamePayload {
     String lobbyID;
     int numberOfPlayers;
     int clientPlayerNumber;
-    LinkedList<String> playerNames;
+    List<String> playerNames;
 }

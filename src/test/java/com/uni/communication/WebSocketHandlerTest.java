@@ -250,7 +250,7 @@ class WebSocketHandlerTest {
         var resultPayload = objectMapper.readValue(sendMessage.getPayload(), UpdateBoardPayload.class);
 
         assertThat(resultPayload.getCardType()).isEqualTo(2);
-        assertThat(resultPayload.getCheatModifier()).isEqualTo(0);
+        assertThat(resultPayload.getCheatModifier()).isZero();
         assertThat(resultPayload.getFigure1ID()).isEqualTo(1);
         assertThat(resultPayload.getFigure2ID()).isEqualTo(-1);
         assertThat(resultPayload.getLobbyID()).isEqualTo(lobby.getId());
@@ -279,10 +279,10 @@ class WebSocketHandlerTest {
 
         var resultPayload = objectMapper.readValue(sendMessage.getPayload(), WormholeSwitchPayload.class);
 
-        assertThat(resultPayload.getNewWormholeFieldPosition_1()).isEqualTo(6);
-        assertThat(resultPayload.getNewWormholeFieldPosition_2()).isEqualTo(22);
-        assertThat(resultPayload.getNewWormholeFieldPosition_3()).isEqualTo(38);
-        assertThat(resultPayload.getNewWormholeFieldPosition_4()).isEqualTo(54);
+        assertThat(resultPayload.getNewWormholeFieldPosition1()).isEqualTo(6);
+        assertThat(resultPayload.getNewWormholeFieldPosition2()).isEqualTo(22);
+        assertThat(resultPayload.getNewWormholeFieldPosition3()).isEqualTo(38);
+        assertThat(resultPayload.getNewWormholeFieldPosition4()).isEqualTo(54);
 
     }
     @Test
