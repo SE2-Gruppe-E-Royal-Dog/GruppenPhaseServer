@@ -4,15 +4,15 @@ import com.uni.carddeck.Card;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.LinkedList;
+import java.util.List;
 
 @Setter
 @Getter
 
 public class SendCardsPayload{
-    private final LinkedList<Card> cards;
+    private final List<Card> cards;
 
-    public SendCardsPayload(LinkedList<Card> cards) {
+    public SendCardsPayload(List<Card> cards) {
         this.cards = cards;
     }
 }

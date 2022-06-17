@@ -22,7 +22,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private final GameCoordinator gameCoordinator;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private static final String unableToNotifyError = "Unable to notify player {} about new Player";
+    private static final String UNABLE_TO_NOTIFY_ERROR = "Unable to notify player {} about new Player";
 
     public WebSocketHandler(GameCoordinator gameCoordinator) {
         this.gameCoordinator = gameCoordinator;
@@ -33,7 +33,6 @@ public class WebSocketHandler extends TextWebSocketHandler {
         super.handleTextMessage(webSocketSession, textMessage);
 
         var websocketMessage = objectMapper.readValue(textMessage.getPayload(), Message.class);
-
 
         switch (websocketMessage.getType()){
             case JOIN_LOBBY:
@@ -101,7 +100,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
             try {
                 lobby.getSessions().get(c.getId()).sendMessage(textMessage);
             } catch (IOException e) {
-                log.error(unableToNotifyError, c.getId());
+                log.error(UNABLE_TO_NOTIFY_ERROR, c.getId());
             }
         }
     }
@@ -120,7 +119,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
             try {
                 lobby.getSessions().get(c.getId()).sendMessage(textMessage);
             } catch (IOException e) {
-                log.error(unableToNotifyError, c.getId());
+                log.error(UNABLE_TO_NOTIFY_ERROR, c.getId());
             }
         }
     }
@@ -144,7 +143,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
                 newPayload.setClientPlayerNumber(i++);
                 message.setPayload(objectMapper.writeValueAsString(newPayload));
                 var textMessage = new TextMessage(objectMapper.writeValueAsString(message));
-
+                lobby.setStarted(true);
                 lobby.getSessions().get(c.getId()).sendMessage(textMessage);
             } catch (IOException e) {
                 log.error("Unable to start game");
@@ -162,17 +161,14 @@ public class WebSocketHandler extends TextWebSocketHandler {
         var message = new Message();
         message.setType(WORMHOLE_MOVE);
 
-
-
         for (var c : playersToNotify) {
             try {
-
                 message.setPayload(objectMapper.writeValueAsString(newPayload));
                 var textMessage = new TextMessage(objectMapper.writeValueAsString(message));
 
                 lobby.getSessions().get(c.getId()).sendMessage(textMessage);
             } catch (IOException e) {
-                log.error(unableToNotifyError, c.getId());
+                log.error(UNABLE_TO_NOTIFY_ERROR, c.getId());
             }
         }
     }

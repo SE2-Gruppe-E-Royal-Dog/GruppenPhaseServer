@@ -12,10 +12,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class WormholeSwitchPayload {
 
-    int newWormholeFieldPosition_1;
-    int newWormholeFieldPosition_2;
-    int newWormholeFieldPosition_3;
-    int newWormholeFieldPosition_4;
+    int newWormholeFieldPosition1;
+    int newWormholeFieldPosition2;
+    int newWormholeFieldPosition3;
+    int newWormholeFieldPosition4;
 
     String lobbyID;
 }
