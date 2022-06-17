@@ -67,7 +67,7 @@ public class Lobby {
 
     public void dealCards() throws JsonProcessingException {
         for(Player p:getPlayers()){
-            if(p.getNumOfCardsLeft()!=0){
+            if(p.getNumOfCardsLeft()>0){
                 return;
             }
         }
@@ -75,6 +75,7 @@ public class Lobby {
 
         for(Player p:players){
             LinkedList<Card> cards = (LinkedList<Card>) deck.drawCards(5);
+            p.setNumOfCardsLeft(5);
 
             var payload = new SendCardsPayload(cards);
             var message = new Message();

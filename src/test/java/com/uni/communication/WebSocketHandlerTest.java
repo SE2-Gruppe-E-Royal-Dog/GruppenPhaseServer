@@ -240,6 +240,7 @@ class WebSocketHandlerTest {
         message.setType(MessageType.UPDATE_BOARD);
         UpdateBoardPayload payload = new UpdateBoardPayload(1, -1, 23, -1, 2, 0, lobby.getId(),player1.getId());
         message.setPayload(objectMapper.writeValueAsString(payload));
+        gameCoordinator.getLobby(payload.getLobbyID()).getPlayerByID(payload.getPlayerID()).setNumOfCardsLeft(10);
 
         webSocketHandler.handleTextMessage(webSocketSession, new TextMessage(objectMapper.writeValueAsString(message)));
         var argumentCaptor = ArgumentCaptor.forClass(TextMessage.class);
