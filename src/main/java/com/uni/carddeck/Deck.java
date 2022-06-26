@@ -13,6 +13,9 @@ public class Deck {
         fillDeck();
     }
 
+    /*
+    Befüllt remainingCards mit 110 Karten in ZUfälliger Reihenfolge.
+     */
     private void fillDeck(){
         var list = new LinkedList<Card>();
         list.addAll(getStandardCards());
@@ -20,6 +23,9 @@ public class Deck {
         remainingCards = shuffleDeck(list);
     }
 
+    /*
+    Erzeugt alle Zahlen- und Effektkarten.
+     */
     private List<Card> getStandardCards(){
         var standardCards = new LinkedList<Card>();
         for(int i=0;i<7;i++){
@@ -44,6 +50,9 @@ public class Deck {
         return standardCards;
     }
 
+    /*
+    Erzeugt alle Karten mit SPezialeffekten.
+     */
     private LinkedList<Card> getAdditionalCards(){
         var additionalCards = new LinkedList<Card>();
         for(int i=0;i<7;i++){
@@ -56,6 +65,9 @@ public class Deck {
         return additionalCards;
     }
 
+    /*
+    Entfernt Karten an zufälligen Indizes un dfügt diese in shuffled ein.
+     */
     private LinkedList<Card> shuffleDeck(LinkedList<Card> toShuffle) {
         LinkedList<Card> shuffled = new LinkedList<>();
         while (!toShuffle.isEmpty()) {
@@ -66,6 +78,9 @@ public class Deck {
         return shuffled;
     }
 
+    /*
+    Entfernt die erste Karte aus remainingCards und gibt diese zurück.
+     */
     public Card drawCard(){
         if(remainingCards.isEmpty()){
             fillDeck();
@@ -73,6 +88,9 @@ public class Deck {
         return remainingCards.removeFirst();
     }
 
+    /*
+    Entfernt eine beliebige Anzahl an Karten aus remainingCards und gibt diese als Liste zurück.
+     */
     public List<Card> drawCards(int num){
         LinkedList<Card> list = new LinkedList<>();
         while(num>0){

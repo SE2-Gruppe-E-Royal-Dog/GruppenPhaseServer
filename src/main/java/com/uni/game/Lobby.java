@@ -69,6 +69,9 @@ public class Lobby {
         throw new IllegalArgumentException("Invalid Player ID");
     }
 
+    /*
+    Sendet jeweils 45 Karten an alle Spieler.
+     */
     public void dealCards() throws JsonProcessingException {
         for(Player p:getPlayers()){
             if(p.getNumOfCardsLeft()>0){
