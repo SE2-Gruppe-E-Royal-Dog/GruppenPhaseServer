@@ -17,6 +17,17 @@ import java.util.stream.Collectors;
 
 import static com.uni.communication.dto.MessageType.*;
 
+/**
+ * Mit Spring kann man einfach die Klasse TextWebSocketHandler extenden um einen WebSocket endpoint anzulegen.
+ * Um Spring dann zu sagen, dass dieser auch verwendet werden soll, muss man eine Configuration Klasse anlegen, die
+ * im configuration package gefunden werden kann. Dort wird die WebSocket Communication mit @EnableWebSocket erlaubt
+ * und der WebSocket handler wird zur registry hinzugefügt, was so viel heißt wie spring soll den WebsocketHandler
+ * verwenden um Messages die an den path /dog-royal geschickt werden mit diesem Handler abzuarbeiten.
+ *
+ * Für die Kommunication werden DTO Klassen verwendet die mit dem ObjectMappper serialisiert/deserialisiert werden.
+ * Die Messages werden im JSON Format übertragen. Der Client in der Android App verwendet GSON fürs serialisieren/deserialisieren.
+ * Die Lobby Logic ist im GameCoordinator.
+ */
 @Slf4j
 public class WebSocketHandler extends TextWebSocketHandler {
     private final GameCoordinator gameCoordinator;

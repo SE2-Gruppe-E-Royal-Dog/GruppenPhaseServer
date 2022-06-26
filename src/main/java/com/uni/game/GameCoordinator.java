@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Klasse, die die Lobbies anlegt, Spieler zu lobbies hinzufügt und diese auch wieder entfernt.
+ */
 @Slf4j
 public class GameCoordinator {
     private final List<Lobby> lobbies;

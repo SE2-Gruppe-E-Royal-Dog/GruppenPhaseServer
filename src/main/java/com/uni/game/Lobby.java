@@ -16,6 +16,10 @@ import org.springframework.web.socket.WebSocketSession;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Klasse die Domain logic für Lobbies beinhaltet, entfernen/hinzufügen von spielern, die Logik ob die Lobby noch
+ * Spieler akzeptieren kann. Die Sessions map beinhaltet die PlayerId als Key und die Connection zum Client als value.
+ */
 @Slf4j
 @Getter
 @Setter
