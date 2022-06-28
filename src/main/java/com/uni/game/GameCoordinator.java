@@ -15,8 +15,8 @@ public class GameCoordinator {
         this.lobbies = new ArrayList<>();
     }
 
-    public String addNewPlayerToLobby(Player player, WebSocketSession webSocketSession) {
-        var maybeAvailableLobby = lobbies.stream().filter(Lobby::isNotStarted).filter(Lobby::isWaitingForPlayers).findAny();
+    public String addNewPlayerToLobby(Player player, String lobbyName, WebSocketSession webSocketSession) {
+        var maybeAvailableLobby = lobbies.stream().filter(Lobby::isNotStarted).filter(Lobby::isWaitingForPlayers).filter(c -> c.getLobbyName().equals(lobbyName)).findAny();
 
         if (maybeAvailableLobby.isPresent()) {
             maybeAvailableLobby.get().addPlayer(player, webSocketSession);
@@ -25,6 +25,8 @@ public class GameCoordinator {
         }
 
         var lobby = new Lobby();
+        lobby.setLobbyName(lobbyName);
+
         lobby.addPlayer(player, webSocketSession);
 
         lobbies.add(lobby);

@@ -21,6 +21,7 @@ import java.util.*;
 @Setter
 public class Lobby {
     private final String id;
+    private String lobbyName;
     private final List<Player> players;
     private final Map<String, WebSocketSession> sessions;
     private Deck deck;

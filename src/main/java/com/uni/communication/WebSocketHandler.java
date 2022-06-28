@@ -78,7 +78,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private String handleNewPlayerMessage(WebSocketSession webSocketSession, String body) throws IOException {
         var payload = objectMapper.readValue(body, NewPlayerPayload.class);
         var newPlayer = new Player(payload.getPlayerName());
-        var lobbyId = gameCoordinator.addNewPlayerToLobby(newPlayer, webSocketSession);
+        var lobbyName = payload.getLobbyName();
+        var lobbyId = gameCoordinator.addNewPlayerToLobby(newPlayer, lobbyName, webSocketSession);
 
         publishPlayerJoinedMessage(lobbyId, newPlayer);
         webSocketSession.sendMessage(getJoinedLobbyMessage(lobbyId, newPlayer.getId()));
